@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { UserData } from "../types/userData";
 import HomeScreen from "../screens/HomeScreen";
-import ActivityScreen from "../screens/Activity";
-import Activity from "../screens/Activity";
+import Activity from "../screens/activity";
 
 // Définissez le type des paramètres de la pile
 export type StackParamList = {
     HomeScreen: undefined;
-    ActivityScreen: undefined;
+    ActivityScreen: {name: string, surname: string};
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();

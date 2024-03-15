@@ -14,7 +14,7 @@ const HomeScreen = ({navigation}:HomeProps) => {
         <SafeAreaView>
             <Text style = {{fontSize: 30}}>Hello</Text>
             <Button title="click me ! ;))"
-                    onPress={()=> navigation.navigate("ActivityScreen")}/>
+                    onPress={()=> navigation.navigate("ActivityScreen", {name: "Matis", surname: "Spinelli"})}/>
         </SafeAreaView>
     );
 };

@@ -4,3 +4,7 @@ export interface UserData {
     surname:string,
 
 }
+
+export interface GenericData {
+    label: string,
+}
