@@ -7,7 +7,7 @@ import {
     View,
     TouchableOpacity,
     FlatList,
-    ScrollView
+    ScrollView, Alert, Modal
 } from 'react-native';
 import {Text} from 'react-native';
 import {StackParamList} from "../components/navigation/StackNavigator";
@@ -17,36 +17,19 @@ import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {userData} from "../types/userData";
 import ResponsiveFontSize from 'react-native-responsive-fontsize';
 import { RFPercentage } from "react-native-responsive-fontsize";
+import {styles} from "../styles/activityStyles";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {NewUserModal, WarningModal} from "../components/homeScreen_cmp";
+
 
 
 
 
 type HomeProps =  NativeStackScreenProps<StackParamList, 'HomeScreen'>;
 
-const testUser : userData = {
-    name : "testname",
-    surname : "testsurname"
-}
-interface infoInputProps {
-    onChangeName : (text : String) => void,
-    onChangeSurname : (text : String) => void,
 
-}
-const InfoInput = ({ onChangeName, onChangeSurname }: infoInputProps)=> {
 
-    return (
-        <View style={homeStyles.row}>
-            <View style = {homeStyles.column}>
-                <Text style={homeStyles.label}> {"Nom"}</Text>
-                <Text style={homeStyles.label}> {"Prénom"}</Text>
-            </View>
-            <View style = {homeStyles.column}>
-                <TextInput placeholder ={"Nom"} style={homeStyles.textInput} onChangeText = {onChangeSurname}></TextInput>
-                <TextInput placeholder ={"Prénom"} style={homeStyles.textInput} onChangeText = {onChangeName}></TextInput>
-            </View>
-        </View>
-        );
-    };
+
 interface CustomRadioButtonProps {
     label : String,
     selected : boolean,
@@ -67,65 +50,72 @@ const CustomRadioButton = ({ label , selected, onSelect} : CustomRadioButtonProp
 
 
 
-    const HomeScreen = ({navigation}:HomeProps) => {
-
-    const [selectedValue, setSelectedValue] = useState('');
-    const [ name , onChangeName] = React.useState('')
-    const [ surname , onChangeSurname] = React.useState('')
+const HomeScreen = ({navigation}:HomeProps) => {
+    // state nom et prenom selectionner dans la liste
+    const [ name , setName] = React.useState('')
+    const [ surname , setSurname] = React.useState('')
+    // state des input lors de la creation d'un user
+    const [ newName , setNewName] = React.useState('')
+    const [ newSurname , setNewSurname] = React.useState('')
+    const [modalVisible, setWarningModalVisible] = useState(false);
+    const [newUserModalVisible, setNewUserModalVisible] = useState(false);
 
     const handleStartActivity = () => {
-        if (name == '' || name == ' '){
-
+        if ( name == '' || surname ==''){
+            setWarningModalVisible(true);
+            return;
         }
         const userData: userData = {
             name: name,
             surname: surname,
         };
-
-
         navigation.navigate("ActivityScreen", {user: userData});
     };
     return (
         <SafeAreaView style = {homeStyles.screen}>
-
-                {/*<View>*/}
-
+            <View style = {{  flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <TouchableOpacity onPress={()=>setNewUserModalVisible(true)} style={homeStyles.newUserButton}>
+                <View style ={{flexDirection: 'row', alignItems: 'center'}}>
+                <Icon name="plus" style = {{color : 'white', fontSize : RFPercentage (2)}}></Icon>
+                <Text style={homeStyles.newUserTextStyle}>  Créer un utilisateur </Text>
+                </View>
+            </TouchableOpacity>
+            </View>
+            <NewUserModal modalVisible={newUserModalVisible} onChangeSurname={setNewSurname} onChangeName={setNewName} setModalVisible={setNewUserModalVisible} />
             <Text style = {homeStyles.title}>Bienvenue ! 🎈</Text>
-                {/*<Text style ={homeStyles.infoLabel}> Veuillez renseignez votre nom et prénom </Text>
-            </View>
-            <InfoInput onChangeName ={onChangeName} onChangeSurname ={onChangeSurname}/>*/}
-            <View style = {homeStyles.list}>
-            <FlatList data={[
-                {key: 'Devin'},
-                {key: 'Dan'},
-                {key: 'Dominic'},
-                {key: 'Jackson'},
-                {key: 'James'},
-                {key: 'Joel'},
-                {key: 'John'},
-                {key: 'Jillian'},
-                {key: 'Jimmy'},
-                {key: 'Juli'},
 
-            ]}  renderItem={({ item }) => (
-                <CustomRadioButton
-                    label={item.key}
-                    selected={selectedValue === item.key}
-                    onSelect={() => setSelectedValue(item.key)}
+            <Text style ={homeStyles.text}> Sélectionnez un utilisateur :</Text>
+            <View style = {homeStyles.list}>
+                <FlatList
+                    data={[
+                        { userData: { name: 'Devin', surname: 'Smith' }},
+                        { userData: { name: 'Dan', surname: 'Johnson' } },
+                        { userData: { name: 'Dominic', surname: 'Brown' }},
+                        { userData: { name: 'Devin2', surname: 'Smith' }},
+                        { userData: { name: 'Dan2', surname: 'Johnson' } },
+                        { userData: { name: 'Dominic2', surname: 'Brown' }},
+
+                    ]}
+                    renderItem={({ item }) => (
+                        <CustomRadioButton
+                            label={item.userData.name + ' ' + item.userData.surname}
+                            selected={ name === item.userData.name && surname === item.userData.surname}
+                            onSelect={() => {setName (item.userData.name), setSurname (item.userData.surname)}}
+                        />
+                    )}
+                    keyExtractor={(item) => item.userData.name + item.userData.surname}
                 />
-            )}
-            />
             </View>
+            <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible}/>
             <TouchableOpacity onPress={()=>handleStartActivity()} style={homeStyles.button}>
                 <Text style={homeStyles.buttonText}> 🚀 Démarrer une activité</Text>
             </TouchableOpacity>
-
         </SafeAreaView>
 
     );
 };
 
-const homeStyles = StyleSheet.create({
+export const homeStyles = StyleSheet.create({
     screen : {
         backgroundColor: 'white', flex:1
     },
@@ -133,32 +123,36 @@ const homeStyles = StyleSheet.create({
         fontSize : RFPercentage(6),
         color: 'black',
         fontWeight: 'bold',
-        margin : '10%',
+        margin : '5%',
+        marginBottom : '4%'
     },
     list :{
         //justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgba(45,155,240,0.52)',
-        height: '50%',
+        height: '43%',
         width: '60%',
-        padding: RFPercentage (4),
+        paddingVertical: RFPercentage(2),
+        padding: RFPercentage (3),
         borderRadius : RFPercentage (5),
     },
     column :{
         flexDirection: 'column',
+        width : 'fit-content',
 
     },
     row : {
         flexDirection : 'row',
-        margin: RFPercentage(5),
+        marginHorizontal: RFPercentage(2),
+        marginTop : RFPercentage (2),
 
     },
     textInput : {
+        width : RFPercentage(15),
         borderColor: 'gray',
         borderWidth: 2,
         borderRadius:11,
         padding: RFPercentage(1),
-        paddingRight:RFPercentage(15),
         margin : RFPercentage(0.5)
     },
     label :{
@@ -174,14 +168,21 @@ const homeStyles = StyleSheet.create({
         fontSize : RFPercentage(2.3),
         margin : '5%',
         color : 'black',
+
     },
+    text :{
+        fontSize : RFPercentage(2.3),
+        margin : '5%',
+        color : '#797272',
+    },
+
     button: {
         marginTop: RFPercentage(5),
         backgroundColor: '#2D9BF0',
         padding: RFPercentage(2),
         borderRadius: 10,
         alignSelf: 'center',
-        boxShadow: 10,
+
 
     },
     buttonText :{
@@ -197,15 +198,56 @@ const homeStyles = StyleSheet.create({
         borderRadius: 8,
         marginVertical: 8,
         borderWidth: 1,
-        borderColor: '#007BFF',
+        borderColor: '#2D9BF0',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        width: RFPercentage (30),
+        width: 'fit-content',
     },
     radioButtonText: {
         fontSize: RFPercentage (2),
     },
+    modalButton: {
+        borderRadius: RFPercentage (2.5),
+        padding: RFPercentage(2),
+        elevation: RFPercentage(0.5),
+        backgroundColor : '#be2c54',
+        marginTop: RFPercentage (4),
+    },
+    modalCenterView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalTextStyle: {
+        color : 'white',
+        fontSize : RFPercentage (3),
+    },
+    newUserTextStyle: {
+        color : 'white',
+        fontSize : RFPercentage (2),
+    },
+    homeModalView: {
+        margin: RFPercentage(5),
+        backgroundColor: 'white',
+        borderRadius: RFPercentage (3),
+        padding: RFPercentage(6),
+        alignItems: 'center',
+        shadowColor: '#be2c54',
+        shadowRadius: RFPercentage (4),
+        elevation: RFPercentage(2),
+    },
+
+    newUserButton :{
+        borderRadius: RFPercentage (2.5),
+        padding: RFPercentage(2),
+        elevation: RFPercentage(0.5),
+        backgroundColor : '#be2c54',
+        marginTop: RFPercentage (2),
+        marginHorizontal: RFPercentage(2),
+        width : 'fit-content'
+    }
+
 
 })
 export default  HomeScreen;
