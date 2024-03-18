@@ -6,16 +6,45 @@ export default function initApp() {
         configFile,
         `{
             "config": {
-                "utilisateurs": [],
-                "lieux": [],
-                "activites": [],
-                "produits": [],
-                "pratiques": []
+                "utilisateurs": [
+                    {
+                        "prenom": "Alex",
+                        "nom": "AALLEEXX"
+                    }
+                ],
+                "lieux": [
+                  "Salle1",
+                  "Couloir1",
+                  "Salle2"
+                ],
+                "activites": [
+                    "act1",
+                    "act2",
+                    "act3",
+                    "act4",
+                    "act5"
+                ],
+                "produits": [
+                    "prod1",
+                    "prod2",
+                    "prod3",
+                    "prod4",
+                    "prod5",
+                    "prod6",
+                    "prod7",
+                    "prod8",
+                    "prod9",
+                    "prod10"
+                ],
+                "pratiques": [
+                    "prat1",
+                    "prat2"
+                ]
             }
         }`
     )
         .catch((err) => {
-            console.error("Couldn't create config file, throwing...")
+            console.error("Couldnt create config file, failure...")
             throw err
         })
 
@@ -26,7 +55,7 @@ export default function initApp() {
         }`
     )
         .catch((err) => {
-            console.error("Couldn't create output file, throwing...")
+            console.error("Couldnt create output file, failure...")
             throw err
         })
 }

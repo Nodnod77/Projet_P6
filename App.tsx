@@ -9,22 +9,23 @@ import React from 'react';
 import * as RNFS from 'react-native-fs'
 
 import StackNavigator from "./src/components/navigation/StackNavigator.tsx";
-import {configFile, outputFile} from "./src/components/jsonFS.ts";
+import JsonFS, {configFile, outputFile} from "./src/components/jsonFS.ts";
 import initApp from "./src/config/initFiles.ts";
 
 function App(): React.JSX.Element {
-  RNFS.exists(configFile).then((res) => {
-    if(!res){
-      console.debug("No config file, init...")
-      initApp()
-    }
-  })
-  RNFS.exists(outputFile).then((res) => {
-    if(!res){
-      console.debug("No output file, init...")
-      initApp()
-    }
-  })
+  let conf = false, outp = false
+
+  JsonFS.getInstance() // Create instance to get configFile and outputFile
+
+  RNFS.exists(configFile).then((res) => conf = res)
+  RNFS.exists(outputFile).then((res) => outp = res)
+
+  if(!conf && !outp){
+    console.debug("First time launching app, init...")
+    initApp()
+  }else if(!conf || !outp){
+    throw new Error("One of the two files is missing !")
+  }
 
   return (
       <StackNavigator/>

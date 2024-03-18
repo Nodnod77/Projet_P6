@@ -14,9 +14,9 @@ export type outputT = {
     activite: string,
     produits: string[],
     pratiques: string[],
-    date_debut: Date,
+    date_debut: string,
     duree: number
-}[]
+}
 
 export type configT = {
     utilisateurs: {prenom: string, nom: string}[],

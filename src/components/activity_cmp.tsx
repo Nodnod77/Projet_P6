@@ -3,13 +3,14 @@ import {Alert, Image, ImageSourcePropType, Modal, Pressable, Text, TouchableOpac
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {styles} from "../styles/activityStyles.ts";
 import {genericData} from "../types/userData.tsx";
+import {RFPercentage} from "react-native-responsive-fontsize";
 
 const renderItem = (
     item: genericData
 ): React.JSX.Element => {
     return (
         <View style={{marginRight: 5}}>
-            <Text style={[styles.selectableText, {color: "#000"}]}>{item.label}</Text>
+            <Text style={styles.selectableText}>{item.label}</Text>
         </View>
     );
 };
@@ -18,7 +19,7 @@ const renderSelectedItem = (
     item: genericData,
 ): React.JSX.Element => (
     <View style={styles.selectedContainer}>
-        <Text style={[styles.selectableText, {color: "#000"}]}>{item.label}</Text>
+        <Text style={styles.selectableText}>{item.label}</Text>
         <Image source={require("../styles/assets/cross.png")} style={{width: 15, height: 15, opacity: 0.6}} />
     </View>
 )
@@ -41,12 +42,13 @@ const ExitModal = ({setModalVisible}: any): React.JSX.Element => {
 
 interface ModalActivityProps {
     name: string,
-    data: genericData[],
-    value: genericData[],
-    setValue: React.Dispatch<React.SetStateAction<genericData[]>>
+    data: string[],
+    value: string[],
+    setValue: React.Dispatch<React.SetStateAction<string[]>>
 }
 export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
     const [modalVisible, setModalVisible] = React.useState(false)
+    let dataAsObj = props.data.map<genericData>((v) => {return {label: v}})
 
     return (
         <View style={{width: "55%", justifyContent: "center", alignItems: "center"}}>
@@ -64,36 +66,24 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
                     <ExitModal setModalVisible={setModalVisible}/>
                     <View style={styles.modalView}>
                         <MultiSelect
-                            style={[styles.dropdown, {width: "90%"}]}
-                            selectedTextStyle={styles.selectableText}
-                            itemContainerStyle={{padding: 8}}
-                            data={props.data}
+                            style={[styles.dropdown, {padding: RFPercentage(0.4), width: "90%"}]}
+                            itemContainerStyle={styles.itemContainer}
+                            containerStyle={{padding: RFPercentage(0.6)}}
+                            data={dataAsObj}
                             labelField="label"
                             valueField="label"
                             placeholder="   ..."
-                            value={props.value.map<string>((v) => v.label)}
+                            value={props.value}
                             search
+                            maxHeight={RFPercentage(32)}
                             searchPlaceholder="Rechercher..."
-                            onChange={(item: string[]) => {
-                                props.setValue(
-                                    item.map<genericData>(
-                                        (i: string) => {
-                                            let res = props.data.find(
-                                                ({label}) => label === i
-                                            )
-                                            // Find should never return undefined
-                                            if (res === undefined) throw new Error("Problem with data for modal")
-                                            else return res
-                                        }
-                                    )
-                                );
-                            }}
+                            onChange={(item: string[]) => props.setValue(item)}
                             inside
                             renderItem={renderItem}
                             renderSelectedItem={renderSelectedItem}
                         />
                         <Pressable
-                            style={[styles.buttonClose, {alignSelf: "flex-end"}]}
+                            style={[styles.buttonClose]}
                             onPress={() => setModalVisible(!modalVisible)}>
                             <Image source={require("../styles/assets/cross.png")} style={{width: 30, height: 30}} />
                         </Pressable>
@@ -114,24 +104,27 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
 }
 
 interface DropListProps {
-    data: genericData[],
+    data: string[],
     value: string,
     setValue: React.Dispatch<React.SetStateAction<string>>
 }
 export const DropList = (props: DropListProps): React.JSX.Element => {
+    let dataAsObj: genericData[] =
+        props.data.map<genericData>((v) => {return {label: v}})
+
     return (
         <Dropdown
             style={styles.dropdown}
             itemTextStyle={[styles.itemTextStyle, {color: "#000"}]}
             selectedTextStyle={[styles.itemTextStyle, {color: "#000"}]}
-            data={props.data}
+            data={dataAsObj}
             search
-            maxHeight={300}
+            maxHeight={RFPercentage(25)}
             labelField="label"
             valueField="label"
             placeholder={''}
             searchPlaceholder="Rechercher..."
-            value={props.data.find((e) => e.label === props.value)}
+            value={dataAsObj.find((e) => e.label === props.value)}
             onChange={item => {
                 props.setValue(item.label);
             }}
