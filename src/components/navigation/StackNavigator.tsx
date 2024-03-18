@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { userData } from "../../types/userData";
 import HomeScreen from "../../screens/HomeScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Activity from "../../screens/activity";
 import {StyleSheet} from "react-native";
 
@@ -21,10 +20,11 @@ const StackNavigator = () => {
         <NavigationContainer  >
             <Stack.Navigator
                 initialRouteName={"HomeScreen"}
-                screenOption = {{
-                headerTintColor : 'white', //text
-                headerStyle : {backgroundColor: '#800636'},
-            }}>
+                screenOptions = {{
+                    headerTintColor : 'white', //text
+                    headerStyle : {backgroundColor: '#2D9BF0'},
+                }}
+            >
                 <Stack.Screen
                     name={"HomeScreen"}
                     component={HomeScreen}

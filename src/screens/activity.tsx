@@ -11,10 +11,9 @@ import {
     VSpace
 } from "../components/activity_cmp.tsx";
 import {styles} from "../styles/activityStyles.ts";
-import {GenericData} from "../types/userData.tsx";
+import {genericData, userData} from "../types/userData.tsx";
 import {StackParamList} from "../components/navigation/StackNavigator.tsx";
 import { RouteProp } from '@react-navigation/native';
-
 
 
 
@@ -24,13 +23,17 @@ interface ActivityProps {
 
 function Activity({ route }: ActivityProps): React.ReactElement{
     const [started, setStarted] = useState(false)
-    const { user } = route.params;
-    const { name, surname } = user;
+    const { name, surname }: userData = route.params.user;
+    console.log(name + surname)
+    console.log(route.params.user)
+
+    let startTime: number, endTime: number
+
     // Data for json output
     const [lieu, setLieu] = useState("")
     const [activite, setActivite] = useState("")
-    const [produits, setProduits]: [GenericData[], React.Dispatch<React.SetStateAction<GenericData[]>>] = useState([] as GenericData[])
-    const [utilisation, setUtilisation]: [GenericData[], React.Dispatch<React.SetStateAction<GenericData[]>>] = useState([] as GenericData[])
+    const [produits, setProduits]: [genericData[], React.Dispatch<React.SetStateAction<genericData[]>>] = useState([] as genericData[])
+    const [utilisation, setUtilisation]: [genericData[], React.Dispatch<React.SetStateAction<genericData[]>>] = useState([] as genericData[])
 
     return (
         <View style={{paddingHorizontal: 40, width: Dimensions.get('window').width}}>
@@ -80,45 +83,46 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                 </InputLine>
                 <VSpace/>
                 {started ?
+                    <><Pressable
+                        style={styles.buttonEnd}
+                        onPress={() => {
+                            // Check lieu and activite has a value
+
+                            endTime = Date.now() // Stop timer
+
+                            // Save into json
+
+                            // Switch buttons
+                            setStarted(false)
+                        }}>
+                        <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 40}]}>
+                            Finir activité en cours
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        style={styles.buttonCancel}
+                        onPress={() => {
+                            // Popup Modal to confirm
+                            // If yes:
+                            // Stop timer, don't save into json
+                            // Switch Buttons
+                            setStarted(false)
+                        }}>
+                        <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 30}]}>
+                            Annuler
+                        </Text>
+                    </Pressable></>
+                    :
                     <Pressable
                         style={styles.buttonStart}
                         onPress={() => {
-                            // Start timer
-                            // Switch buttons
-                            setStarted(true)
+                            startTime = Date.now() // Start timer
+                            setStarted(true) // Switch buttons
                         }}>
                         <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 60}]}>
                             🏁 Commencer
                         </Text>
                     </Pressable>
-                    :
-                    <View>
-                        <Pressable
-                            style={styles.buttonEnd}
-                            onPress={() => {
-                                // Stop timer
-                                // Save into json
-                                // Switch buttons
-                                setStarted(false)
-                            }}>
-                            <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 40}]}>
-                                Finir activité en cours
-                            </Text>
-                        </Pressable>
-                        <Pressable
-                            style={styles.buttonCancel}
-                            onPress={() => {
-                                // Popup Modal to confirm
-                                // If yes:
-                                    // Stop timer, don't save into json
-                                    // Switch Buttons
-                                setStarted(false)
-                            }}>
-                            <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 30}]}>
-                                Annuler
-                            </Text>
-                        </Pressable>
-                    </View>
                 }
             </View>
         </View>

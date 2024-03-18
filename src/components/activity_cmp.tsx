@@ -2,10 +2,10 @@ import React from "react";
 import {Alert, Image, ImageSourcePropType, Modal, Pressable, Text, TouchableOpacity, View} from "react-native";
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {styles} from "../styles/activityStyles.ts";
-import {GenericData} from "../types/userData.tsx";
+import {genericData} from "../types/userData.tsx";
 
 const renderItem = (
-    item: GenericData
+    item: genericData
 ): React.JSX.Element => {
     return (
         <View style={{marginRight: 5}}>
@@ -15,11 +15,11 @@ const renderItem = (
 };
 
 const renderSelectedItem = (
-    item: GenericData,
+    item: genericData,
 ): React.JSX.Element => (
     <View style={styles.selectedContainer}>
         <Text style={[styles.selectableText, {color: "#000"}]}>{item.label}</Text>
-        <Image source={require("../assets/cross.png")} style={{width: 15, height: 15, opacity: 0.6}} />
+        <Image source={require("../styles/assets/cross.png")} style={{width: 15, height: 15, opacity: 0.6}} />
     </View>
 )
 
@@ -41,9 +41,9 @@ const ExitModal = ({setModalVisible}: any): React.JSX.Element => {
 
 interface ModalActivityProps {
     name: string,
-    data: GenericData[],
-    value: GenericData[],
-    setValue: React.Dispatch<React.SetStateAction<GenericData[]>>
+    data: genericData[],
+    value: genericData[],
+    setValue: React.Dispatch<React.SetStateAction<genericData[]>>
 }
 export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
     const [modalVisible, setModalVisible] = React.useState(false)
@@ -76,7 +76,7 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
                             searchPlaceholder="Rechercher..."
                             onChange={(item: string[]) => {
                                 props.setValue(
-                                    item.map<GenericData>(
+                                    item.map<genericData>(
                                         (i: string) => {
                                             let res = props.data.find(
                                                 ({label}) => label === i
@@ -95,7 +95,7 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
                         <Pressable
                             style={[styles.buttonClose, {alignSelf: "flex-end"}]}
                             onPress={() => setModalVisible(!modalVisible)}>
-                            <Image source={require("../assets/cross.png")} style={{width: 30, height: 30}} />
+                            <Image source={require("../styles/assets/cross.png")} style={{width: 30, height: 30}} />
                         </Pressable>
                     </View>
                     <ExitModal setModalVisible={setModalVisible}/>
@@ -114,7 +114,7 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
 }
 
 interface DropListProps {
-    data: GenericData[],
+    data: genericData[],
     value: string,
     setValue: React.Dispatch<React.SetStateAction<string>>
 }
