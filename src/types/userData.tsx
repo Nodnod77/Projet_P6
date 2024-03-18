@@ -1,5 +1,4 @@
-export interface UserData {
-    code:string,
+export interface userData {
     name:string,
     surname:string,
 

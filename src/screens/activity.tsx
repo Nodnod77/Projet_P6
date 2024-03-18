@@ -12,15 +12,20 @@ import {
 } from "../components/activity_cmp.tsx";
 import {styles} from "../styles/activityStyles.ts";
 import {GenericData} from "../types/userData.tsx";
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
-import {StackParamList} from "../navigation/StackNavigator.tsx";
+import {StackParamList} from "../components/navigation/StackNavigator.tsx";
+import { RouteProp } from '@react-navigation/native';
 
 
-// type ActivityProps =  NativeStackScreenProps<StackParamList, 'ActivityScreen'>;
-//function Activity(props: ActivityProps): React.JSX.Element {
-function Activity(props: {name: string, surname: string}): React.JSX.Element {
+
+
+interface ActivityProps {
+    route: RouteProp<StackParamList, 'ActivityScreen'>;
+}
+
+function Activity({ route }: ActivityProps): React.ReactElement{
     const [started, setStarted] = useState(false)
-
+    const { user } = route.params;
+    const { name, surname } = user;
     // Data for json output
     const [lieu, setLieu] = useState("")
     const [activite, setActivite] = useState("")
@@ -31,9 +36,9 @@ function Activity(props: {name: string, surname: string}): React.JSX.Element {
         <View style={{paddingHorizontal: 40, width: Dimensions.get('window').width}}>
             <VSpace margin={24}/>
             <View style={{flexDirection: "row"}}>
-                <Image source={require('../assets/id-card.png')} style={{width: 70, height: 70}} />
+                <Image source={require('../styles/assets/id-card.png')} style={{width: 70, height: 70}} />
                 <Text style={[styles.text, {color: "#000"}]}>
-                    {props.name/*props.route.params.name*/} {props.surname/*props.route.params.surname*/}
+                    {name} {surname}
                 </Text>
             </View>
             <VSpace margin={6}/>
@@ -42,7 +47,7 @@ function Activity(props: {name: string, surname: string}): React.JSX.Element {
             </View>
             <View style={{marginLeft: 30}}>
                 <VSpace margin={30}/>
-                <InputLine icon={require("../assets/location.png")} name={"Lieu"}>
+                <InputLine icon={require("../styles/assets/location.png")} name={"Lieu"}>
                     <DropList value={lieu} setValue={setLieu} data={[
                         {label: "First"},
                         {label: "Second"},
@@ -50,7 +55,7 @@ function Activity(props: {name: string, surname: string}): React.JSX.Element {
                     ]} />
                 </InputLine>
                 <VSpace/>
-                <InputLine icon={require("../assets/todo.png")} name={"Activité"}>
+                <InputLine icon={require("../styles/assets/todo.png")} name={"Activité"}>
                     <DropList value={activite} setValue={setActivite} data={[
                         {label: "First"},
                         {label: "Second"},
@@ -58,7 +63,7 @@ function Activity(props: {name: string, surname: string}): React.JSX.Element {
                     ]} />
                 </InputLine>
                 <VSpace/>
-                <InputLine icon={require("../assets/chemical.png")} name={"Produits"}>
+                <InputLine icon={require("../styles/assets/chemical.png")} name={"Produits"}>
                     <ModalActivity value={produits} setValue={setProduits} name={"Produits"} data={[
                         {label: "First"},
                         {label: "Second"},
@@ -66,7 +71,7 @@ function Activity(props: {name: string, surname: string}): React.JSX.Element {
                     ]} />
                 </InputLine>
                 <VSpace/>
-                <InputLine icon={require("../assets/hand.png")} name={"Utilisation des produits"}>
+                <InputLine icon={require("../styles/assets/hand.png")} name={"Utilisation des produits"}>
                     <ModalActivity value={utilisation} setValue={setUtilisation} name={"Utilisation des produits"} data={[
                         {label: "First"},
                         {label: "Second"},
