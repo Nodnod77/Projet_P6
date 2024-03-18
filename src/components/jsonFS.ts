@@ -1,59 +1,76 @@
 import * as RNFS from "react-native-fs";
 import {configT, outputT} from "../types/userData.tsx";
 
-export class JsonFS {
-    isLoaded: boolean = false
-    loadingFailure: boolean = false
 
-    output: outputT[] = [] as outputT[]
-    config: configT = {} as configT
+export const configFile = RNFS.DocumentDirectoryPath + "/config.json"
+export const outputFile = RNFS.DocumentDirectoryPath + "/output.json"
 
-    constructor() {
+// Singleton JsonFS handler
+export default class JsonFS {
+    private static isLoaded: boolean = false
+    private static loadingFailure: boolean = false
+
+    private static output: outputT[] = [] as outputT[]
+    private static config: configT = {} as configT
+
+    private static instance: JsonFS
+
+    private constructor() {
         let first: boolean = false
         let second: boolean = false
 
         // Load config.json
-        RNFS.readFile(RNFS.DocumentDirectoryPath + "/config.json")
+        RNFS.readFile(configFile)
             .then((result) => {
-                this.config = JSON.parse(result)
+                JsonFS.config = JSON.parse(result)
+                console.log(JsonFS.config) // TODO: Remove me
                 first = true
-                if(first && second) this.isLoaded = true
+                if(first && second) JsonFS.isLoaded = true
             })
             .catch((err) => {
-                this.loadingFailure = true
+                JsonFS.loadingFailure = true
                 console.error("Couldn't load config file, see below")
                 console.error(err.toString())
             })
 
         // Load output.json
-        RNFS.readFile(RNFS.DocumentDirectoryPath + "/output.json")
+        RNFS.readFile(outputFile)
             .then((result) => {
-                this.output = JSON.parse(result)
+                JsonFS.output = JSON.parse(result)
+                console.log(JsonFS.output) // TODO: Remove me
                 second = true
-                if(first && second) this.isLoaded = true
+                if(first && second) JsonFS.isLoaded = true
             })
             .catch((err) => {
-                this.loadingFailure = true
+                JsonFS.loadingFailure = true
                 console.error("Couldn't load output file, see below")
                 console.error(err.toString())
             })
     }
 
-    async addUser(
+    public static async getInstance(): Promise<JsonFS> {
+        if(! JsonFS.instance){
+            JsonFS.instance = new JsonFS()
+        }
+
+        return JsonFS.instance
+    }
+
+    public static async addUser(
         name: string,
         surname: string
     ) {
         // Wait for loading to finish and check failure
-        if(this.loadingFailure) return
-        while(! this.isLoaded) {
+        if(JsonFS.loadingFailure) return
+        while(! JsonFS.isLoaded) {
             console.log("Files still not loaded...")
             await new Promise(f => setTimeout(f, 10));
         }
 
-        this.config.utilisateurs.push({prenom: name, nom: surname})
+        JsonFS.config.utilisateurs.push({prenom: name, nom: surname})
         RNFS.writeFile(
-            RNFS.DocumentDirectoryPath + "/config.json",
-            JSON.stringify(JSON.stringify(this.config))
+            configFile,
+            JSON.stringify(JSON.stringify(JsonFS.config))
         )
             .catch((err) => {
                 console.error("Couldn't add user to config file, see below")
@@ -61,20 +78,20 @@ export class JsonFS {
             })
     }
 
-    async addEntry(
+    public static async addEntry(
         output: outputT
     ){
         // Wait for loading to finish and check failure
-        if(this.loadingFailure) return
-        while(! this.isLoaded){
+        if(JsonFS.loadingFailure) return
+        while(! JsonFS.isLoaded){
             console.log("Files still not loaded...")
             await new Promise(f => setTimeout(f, 10));
         }
 
-        this.output.push(output)
+        JsonFS.output.push(output)
         RNFS.writeFile(
-            RNFS.DocumentDirectoryPath + "/output.json",
-            JSON.stringify(JSON.stringify(this.output))
+            outputFile,
+            JSON.stringify(JSON.stringify(JsonFS.output))
         )
             .catch((err) => {
                 console.error("Couldn't add entry to output file, see below")
