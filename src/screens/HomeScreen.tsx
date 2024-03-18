@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Pressable,
     SafeAreaView,
@@ -16,7 +16,7 @@ import { Button } from 'react-native';
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {userData} from "../types/userData";
 import ResponsiveFontSize from 'react-native-responsive-fontsize';
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { RFPercentage } from "react-native-responsive-fontsize";
 
 
 
@@ -47,9 +47,29 @@ const InfoInput = ({ onChangeName, onChangeSurname }: infoInputProps)=> {
         </View>
         );
     };
+interface CustomRadioButtonProps {
+    label : String,
+    selected : boolean,
+    onSelect : ()=> void,
+}
+const CustomRadioButton = ({ label , selected, onSelect} : CustomRadioButtonProps) => (
+    <TouchableOpacity
+        style={[homeStyles.radioButton,
+            { backgroundColor: selected ? '#007BFF' : '#FFF' }]}
+        onPress={onSelect}
+    >
+        <Text style={[homeStyles.radioButtonText,
+            { color: selected ? '#FFF' : '#000' }]}>
+            {label}
+        </Text>
+    </TouchableOpacity>
+);
 
 
-const HomeScreen = ({navigation}:HomeProps) => {
+
+    const HomeScreen = ({navigation}:HomeProps) => {
+
+    const [selectedValue, setSelectedValue] = useState('');
     const [ name , onChangeName] = React.useState('')
     const [ surname , onChangeSurname] = React.useState('')
 
@@ -87,9 +107,14 @@ const HomeScreen = ({navigation}:HomeProps) => {
                 {key: 'Jimmy'},
                 {key: 'Juli'},
 
-            ]}
-                      renderItem={({item}) =><Text style={homeStyles.itemList}>{item.key}</Text>}>
-            </FlatList>
+            ]}  renderItem={({ item }) => (
+                <CustomRadioButton
+                    label={item.key}
+                    selected={selectedValue === item.key}
+                    onSelect={() => setSelectedValue(item.key)}
+                />
+            )}
+            />
             </View>
             <TouchableOpacity onPress={()=>handleStartActivity()} style={homeStyles.button}>
                 <Text style={homeStyles.buttonText}> 🚀 Démarrer une activité</Text>
@@ -104,13 +129,6 @@ const homeStyles = StyleSheet.create({
     screen : {
         backgroundColor: 'white', flex:1
     },
-    itemList: {
-        fontSize: RFPercentage(3),
-        height: RFPercentage(5),
-        color : 'black',
-        marginLeft : RFPercentage (3),
-        marginBottom: RFPercentage(1),
-    },
     title:{
         fontSize : RFPercentage(6),
         color: 'black',
@@ -118,9 +136,13 @@ const homeStyles = StyleSheet.create({
         margin : '10%',
     },
     list :{
-        paddingVertical: RFPercentage (3),
-        backgroundColor : '#dde7ef',
+        //justifyContent: 'center',
+        alignSelf: 'center',
+        backgroundColor: 'rgba(45,155,240,0.52)',
         height: '50%',
+        width: '60%',
+        padding: RFPercentage (4),
+        borderRadius : RFPercentage (5),
     },
     column :{
         flexDirection: 'column',
@@ -132,7 +154,6 @@ const homeStyles = StyleSheet.create({
 
     },
     textInput : {
-        // flex: 1,
         borderColor: 'gray',
         borderWidth: 2,
         borderRadius:11,
@@ -169,7 +190,22 @@ const homeStyles = StyleSheet.create({
         fontSize: RFPercentage (3.5),
         marginRight: RFPercentage(1),
 
-    }
+    },
+    radioButton: {
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        marginVertical: 8,
+        borderWidth: 1,
+        borderColor: '#007BFF',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: RFPercentage (30),
+    },
+    radioButtonText: {
+        fontSize: RFPercentage (2),
+    },
 
 })
 export default  HomeScreen;
