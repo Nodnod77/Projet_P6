@@ -11,55 +11,26 @@ import {
 } from 'react-native';
 import {Text} from 'react-native';
 import {StackParamList} from "../components/navigation/StackNavigator";
-import {StackNavigationProp} from "@react-navigation/stack";
-import { Button } from 'react-native';
+
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {userData} from "../types/dataTypes";
-import ResponsiveFontSize from 'react-native-responsive-fontsize';
 import { RFPercentage } from "react-native-responsive-fontsize";
-import {styles} from "../styles/activityStyles";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {NewUserModal, WarningModal} from "../components/homeScreen_cmp";
+import {CustomRadioButton, NewUserModal, WarningModal} from "../components/homeScreen_cmp";
 import JsonFS from "../components/jsonFS";
 
 
 
 interface HomeProps  {
     navigation : NativeStackScreenProps<StackParamList, 'HomeScreen'>,
-    userTab : userData[],
 };
 
 
 
 
 
-
-interface CustomRadioButtonProps {
-    label : String,
-    selected : boolean,
-    onSelect : ()=> void,
-}
-const CustomRadioButton = ({ label , selected, onSelect} : CustomRadioButtonProps) => (
-    <TouchableOpacity
-        style={[homeStyles.radioButton,
-            { backgroundColor: selected ? '#007BFF' : '#FFF' }]}
-        onPress={onSelect}
-    >
-        <Text style={[homeStyles.radioButtonText,
-            { color: selected ? '#FFF' : '#000' }]}>
-            {label}
-        </Text>
-    </TouchableOpacity>
-);
-const initUserTab =()=>{
-    const json = JsonFS.getInstance();
-    console.log('initiTab2: ',json.config.utilisateurs)
-    return (json.config.utilisateurs);
-}
-
-
 const HomeScreen = ({navigation}:HomeProps) => {
-    // state nom et prenom selectionner dans la liste
+    // state nom et prénom sélectionner dans la liste
     const [ name , setName] = React.useState('')
     const [ surname , setSurname] = React.useState('')
     // state des input lors de la creation d'un user
@@ -67,7 +38,23 @@ const HomeScreen = ({navigation}:HomeProps) => {
     const [ newSurname , setNewSurname] = React.useState('')
     const [modalVisible, setWarningModalVisible] = useState(false);
     const [newUserModalVisible, setNewUserModalVisible] = useState(false);
-    const [userTab , setUserTab] = useState(initUserTab)
+    const [userTab , setUserTab] = useState([]);
+    const [isReload, setIsReload] = useState(false);
+
+    function  initUser() {
+        const json = JsonFS.getInstance();
+        JsonFS.waitForLoad().then(() => setUserTab(json.config.utilisateurs))
+        console.log('initiTab2: ', json.config.utilisateurs);
+    }
+    initUser();
+
+    if (isReload){
+        console.log('reload !')
+        initUser ();
+        setIsReload(false);
+        setNewName("");
+        setNewSurname("");
+    }
 
     const handleStartActivity = () => {
         if ( name == '' || surname ==''){
@@ -83,15 +70,25 @@ const HomeScreen = ({navigation}:HomeProps) => {
     };
     return (
         <SafeAreaView style = {homeStyles.screen}>
-            <View style = {{  flexDirection: 'row', justifyContent: 'flex-end' }}>
-            <TouchableOpacity onPress={()=>setNewUserModalVisible(true)} style={homeStyles.newUserButton}>
-                <View style ={{flexDirection: 'row', alignItems: 'center'}}>
-                <Icon name="plus" style = {{color : 'white', fontSize : RFPercentage (2)}}></Icon>
-                <Text style={homeStyles.newUserTextStyle}>  Créer un utilisateur </Text>
+            <View style ={homeStyles.column}>
+                <View style = {{  flexDirection: 'row', justifyContent: 'flex-end' }}>
+                <TouchableOpacity onPress={()=>setNewUserModalVisible(true)} style={homeStyles.newUserButton}>
+                    <View style ={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Icon name="plus" style = {{color : 'white', fontSize : RFPercentage (2)}}></Icon>
+                    <Text style={homeStyles.newUserTextStyle}>  Créer un utilisateur </Text>
+                    </View>
+                </TouchableOpacity>
                 </View>
-            </TouchableOpacity>
             </View>
-            <NewUserModal modalVisible={newUserModalVisible} onChangeSurname={setNewSurname} onChangeName={setNewName} setModalVisible={setNewUserModalVisible} newSurname={newSurname} newName={newName}   />
+            <View style = {{  flexDirection: 'row', justifyContent: 'flex-end' }}>
+                <TouchableOpacity onPress={()=>setNewUserModalVisible(true)} style={homeStyles.newUserButton}>
+                    <View style ={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Icon name="plus" style = {{color : 'white', fontSize : RFPercentage (2)}}></Icon>
+                        <Text style={homeStyles.newUserTextStyle}>  Créer un utilisateur </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+            <NewUserModal modalVisible={newUserModalVisible} onChangeSurname={setNewSurname} onChangeName={setNewName} setModalVisible={setNewUserModalVisible} newSurname={newSurname} newName={newName} setIsReload={setIsReload}   />
             <Text style = {homeStyles.title}>Bienvenue ! 🎈</Text>
 
             <Text style ={homeStyles.text}> Sélectionnez un utilisateur :</Text>

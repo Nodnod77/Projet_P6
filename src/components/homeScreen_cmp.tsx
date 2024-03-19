@@ -12,6 +12,27 @@ import JsonFS from './jsonFS';
 import {StackParamList} from "./navigation/StackNavigator";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 
+
+interface CustomRadioButtonProps {
+    label : String,
+    selected : boolean,
+    onSelect : ()=> void,
+}
+export const CustomRadioButton = ({ label , selected, onSelect} : CustomRadioButtonProps) => (
+    <TouchableOpacity
+        style={[homeStyles.radioButton,
+            { backgroundColor: selected ? '#007BFF' : '#FFF' }]}
+        onPress={onSelect}
+    >
+        <Text style={[homeStyles.radioButtonText,
+            { color: selected ? '#FFF' : '#000' }]}>
+            {label}
+        </Text>
+    </TouchableOpacity>
+);
+
+
+
 export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisible, modalVisible,warningLabel }) => {
 
     return (
@@ -69,12 +90,14 @@ interface newUserModalProps {
     onChangeSurname : (String) => void,
     newName : String,
     newSurname : String,
-  navigation : NativeStackScreenProps<StackParamList, 'HomeScreen'>;
+    setIsReload : (boolean)=> void,
+
 
 }
-export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, modalVisible, onChangeSurname, onChangeName, newSurname, newName  , navigation} ) => {
+export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, modalVisible, onChangeSurname, onChangeName, newSurname, newName,setIsReload } ) => {
     //state de la modal input name et surname
     const [ newUserWarningModalVisible, setNewUserWarningModalVisible] = useState(false);
+
     function handleCreateUser() {
         if ( newSurname === '' || newSurname ===' ' && newName === '' || newName === ' '){
             setNewUserWarningModalVisible(true);
@@ -82,7 +105,7 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
         }
         const json = JsonFS.getInstance();
 
-        json.addUser(newName, newSurname).then(r => setNewUserWarningModalVisible(false)); // + faire un .then et set la liste des user
+        json.addUser(newName, newSurname).then(r => {setModalVisible(false); setIsReload(true);}); // + faire un .then et set la liste des user
     }
 
     return (
