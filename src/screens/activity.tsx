@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 import {
     Alert,
     Dimensions,
@@ -38,12 +38,22 @@ function Activity({ route }: ActivityProps): React.ReactElement{
 
     // Data for json output
     const [lieu, setLieu] = useState("")
+    const [lieuData, setLieuData] = useState([] as string[])
     const [activite, setActivite] = useState("")
+    const [activiteData, setActiviteData] = useState([] as string[])
     const [produits, setProduits] = useState([] as string[])
-    const [utilisation, setUtilisation] = useState([] as string[])
+    const [produitsData, setProduitsData] = useState([] as string[])
+    const [utilisations, setUtilisationss] = useState([] as string[])
+    const [utilisationsData, setUtilisationssData] = useState([] as string[])
 
     // JSON handler
     const jsHandle = JsonFS.getInstance()
+    JsonFS.waitForLoad().then(() => {
+        setLieuData(jsHandle.config.lieux)
+        setActiviteData(jsHandle.config.activites)
+        setProduitsData(jsHandle.config.produits)
+        setUtilisationssData(jsHandle.config.pratiques)
+    })
 
     // Warning modal
     const [modalVisible, setModalVisible] = useState(false)
@@ -64,25 +74,25 @@ function Activity({ route }: ActivityProps): React.ReactElement{
             <View style={{marginLeft: 30}}>
                 <VSpace margin={30}/>
                 <InputLine icon={require("../styles/assets/location.png")} name={"Lieu"}>
-                    <DropList value={lieu} setValue={setLieu} data={jsHandle.config.lieux} />
+                    <DropList value={lieu} setValue={setLieu} data={lieuData} />
                 </InputLine>
                 <VSpace/>
                 <InputLine icon={require("../styles/assets/todo.png")} name={"Activité"}>
-                    <DropList value={activite} setValue={setActivite} data={jsHandle.config.activites} />
+                    <DropList value={activite} setValue={setActivite} data={activiteData} />
                 </InputLine>
                 <VSpace/>
                 <InputLine icon={require("../styles/assets/chemical.png")} name={"Produits"}>
                     <ModalActivity
                         value={produits} setValue={setProduits}
                         name={"Produits"}
-                        data={jsHandle.config.produits} />
+                        data={produitsData} />
                 </InputLine>
                 <VSpace/>
-                <InputLine icon={require("../styles/assets/hand.png")} name={"Mode d'utilisation"}>
+                <InputLine icon={require("../styles/assets/hand.png")} name={"Mode d'utilisations"}>
                     <ModalActivity
-                        value={utilisation} setValue={setUtilisation}
-                        name={"Mode d'utilisation"}
-                        data={jsHandle.config.pratiques} />
+                        value={utilisations} setValue={setUtilisationss}
+                        name={"Mode d'utilisations"}
+                        data={utilisationsData} />
                 </InputLine>
                 {started ?
                     <><VSpace margin={RFPercentage(1)}/>
@@ -121,7 +131,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                                 lieu: lieu,
                                 activite: activite,
                                 produits: produits,
-                                pratiques: utilisation,
+                                pratiques: utilisations,
                                 date_debut: new Date(startTime).toISOString(),
                                 duree: Math.floor((Date.now() - startTime) / 1000) // From ms to seconds
                             }

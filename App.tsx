@@ -15,7 +15,7 @@ import initApp from "./src/config/initFiles.ts";
 function App(): React.JSX.Element {
   let conf = false, outp = false
 
-  JsonFS.getInstance() // Create instance to get configFile and outputFile
+  JsonFS.loadPaths() // Get configFile and outputFile
 
   RNFS.exists(configFile).then((res) => {
     conf = res

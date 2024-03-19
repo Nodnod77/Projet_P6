@@ -19,9 +19,15 @@ export default class JsonFS {
 
     // ----Getters for config and output---- //
     public get output() {
+        if(!JsonFS.isLoaded){
+            console.error("Output is being read before JSON load is complete, this is not supposed to happen !")
+        }
         return JsonFS.output
     }
     public get config() {
+        if(!JsonFS.isLoaded){
+            console.error("Config is being read before JSON load is complete, this is not supposed to happen !")
+        }
         return JsonFS.config
     }
 
@@ -30,13 +36,7 @@ export default class JsonFS {
         let second: boolean = false
 
         // NOTE: This part need test for iOS
-        if(Platform.OS === "android"){
-            configFile = RNFS.ExternalDirectoryPath + "/config.json"
-            outputFile = RNFS.ExternalDirectoryPath + "/output.json"
-        }else if(Platform.OS === "ios"){
-            configFile = RNFS.DocumentDirectoryPath + "/config.json"
-            outputFile = RNFS.DocumentDirectoryPath + "/output.json"
-        }else throw new Error("Platform is not recognized as either android or iOS")
+        JsonFS.loadPaths()
 
         // Load config.json
         RNFS.readFile(configFile)
@@ -68,7 +68,7 @@ export default class JsonFS {
     private write(file: string) {
         RNFS.writeFile(
             file === "config" ? configFile : outputFile,
-            `{${file}: ${JSON.stringify(file === "config" ? JsonFS.config : JsonFS.output)}}`
+            `{"${file}": ${JSON.stringify(file === "config" ? JsonFS.config : JsonFS.output)}}`
         )
             .catch((err) => {
                 console.error(`Couldn't append to ${file} file, see below`)
@@ -77,8 +77,20 @@ export default class JsonFS {
     }
 
 
+
+
     // -------------Public Methods -------------- //
-    static getInstance(): JsonFS {
+    public static loadPaths() {
+        if(Platform.OS === "android"){
+            configFile = RNFS.ExternalDirectoryPath + "/config.json"
+            outputFile = RNFS.ExternalDirectoryPath + "/output.json"
+        }else if(Platform.OS === "ios"){
+            configFile = RNFS.DocumentDirectoryPath + "/config.json"
+            outputFile = RNFS.DocumentDirectoryPath + "/output.json"
+        }else throw new Error("Platform is not recognized as either android or iOS")
+    }
+
+    public static getInstance(): JsonFS {
         if(! JsonFS.instance){
             JsonFS.instance = new JsonFS()
         }
@@ -86,16 +98,20 @@ export default class JsonFS {
         return JsonFS.instance
     }
 
+    public static async waitForLoad() {
+        if(JsonFS.loadingFailure) return
+        while(! JsonFS.isLoaded){
+            console.log("Files still not loaded...")
+            await new Promise(f => setTimeout(f, 10));
+        }
+    }
+
     public async addUser(
         name: string,
         surname: string
     ) {
         // Wait for loading to finish and check failure
-        if(JsonFS.loadingFailure) return
-        while(! JsonFS.isLoaded) {
-            console.log("Files still not loaded...")
-            await new Promise(f => setTimeout(f, 10));
-        }
+        await JsonFS.waitForLoad()
 
         JsonFS.config.utilisateurs.push({prenom: name, nom: surname})
         this.write("config")
@@ -106,11 +122,7 @@ export default class JsonFS {
         surname: string
     ){
         // Wait for loading to finish and check failure
-        if(JsonFS.loadingFailure) return
-        while(! JsonFS.isLoaded) {
-            console.log("Files still not loaded...")
-            await new Promise(f => setTimeout(f, 10));
-        }
+        await JsonFS.waitForLoad()
 
         JsonFS.config.utilisateurs.splice(
             JsonFS.config.utilisateurs.indexOf({prenom: name, nom: surname})
@@ -122,11 +134,7 @@ export default class JsonFS {
         entry: outputT
     ){
         // Wait for loading to finish and check failure
-        if(JsonFS.loadingFailure) return
-        while(! JsonFS.isLoaded){
-            console.log("Files still not loaded...")
-            await new Promise(f => setTimeout(f, 10));
-        }
+        await JsonFS.waitForLoad()
 
         console.debug(entry) // TODO: Remove me
         JsonFS.output.push(entry)

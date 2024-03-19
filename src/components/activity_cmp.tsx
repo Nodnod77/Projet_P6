@@ -1,4 +1,4 @@
-import React, {ReactNode} from "react";
+import React from "react";
 import {Image, ImageSourcePropType, Pressable, Text, View} from "react-native";
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {activityStyles} from "../styles/activityStyles.ts";
