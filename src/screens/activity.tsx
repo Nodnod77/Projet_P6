@@ -1,22 +1,26 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
     Alert,
     Dimensions,
-    Image, Pressable,
-    Text, View
+    Image,
+    Pressable,
+    Text,
+    View
 } from 'react-native';
 import {
     DropList,
     InputLine,
     ModalActivity,
-    VSpace, WarningModal
+    VSpace,
+    WarningModal
 } from "../components/activity_cmp.tsx";
 import {activityStyles} from "../styles/activityStyles.ts";
 import {outputT, userData} from "../types/dataTypes.tsx";
 import {StackParamList} from "../components/navigation/StackNavigator.tsx";
-import { RouteProp } from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import JsonFS from "../components/jsonFS.ts";
-
+import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
+import {RFPercentage} from "react-native-responsive-fontsize";
 
 
 interface ActivityProps {
@@ -24,9 +28,13 @@ interface ActivityProps {
 }
 
 function Activity({ route }: ActivityProps): React.ReactElement{
+    // Params
+    const { name, surname }: userData = route.params.user;
+
+    // Time
     const [started, setStarted] = useState(false)
     const [startTime, setStartTime] = useState(0)
-    const { name, surname }: userData = route.params.user;
+    let time = 0
 
     // Data for json output
     const [lieu, setLieu] = useState("")
@@ -76,9 +84,34 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                         name={"Mode d'utilisation"}
                         data={jsHandle.config.pratiques} />
                 </InputLine>
-                <VSpace/>
                 {started ?
-                    <><Pressable
+                    <><VSpace margin={RFPercentage(1)}/>
+                    <View style={{alignItems: "center", margin: RFPercentage(1)}}>
+                        <CountdownCircleTimer
+                            isPlaying
+                            isGrowing
+                            duration={60}
+                            colors="#be2c54"
+                            onComplete={() => {
+                                // do your stuff here
+                                time += 60
+                                return { shouldRepeat: true }
+                            }}
+                        >
+                            {({ elapsedTime }) => {
+                                let t = time + elapsedTime
+                                let h = Math.floor(t / 3600)
+                                let m = Math.floor(t / 60 - h * 60)
+                                let s = Math.floor(t - h * 3600 - m * 60)
+                                return (
+                                    <Text style={{fontSize: RFPercentage(2)}}>
+                                        {`${h < 10 ? "0" : ""}${h}:${m < 10 ? "0" : ""}${m}:${s}`}
+                                    </Text>
+                                )
+                            }}
+                        </CountdownCircleTimer>
+                    </View>
+                    <Pressable
                         style={activityStyles.buttonEnd}
                         onPress={() => {
                             // Save into json
@@ -114,11 +147,12 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                     <WarningModal modalVisible={modalVisible} setWarningModalVisible={setModalVisible}
                                   setStarted={setStarted} /></>
                     :
+                    <><VSpace margin={RFPercentage(6)}/>
                     <Pressable
                         style={activityStyles.buttonStart}
                         onPress={() => {
                             if(lieu !== "" && activite !== "") {
-                                setStartTime(Date.now) // Timer
+                                setStartTime(Date.now) // Time
                                 setStarted(true) // Switch buttons
                             }else{
                                 Alert.alert(
@@ -130,7 +164,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                         <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: 60}]}>
                             🏁 Commencer
                         </Text>
-                    </Pressable>
+                    </Pressable></>
                 }
             </View>
         </View>

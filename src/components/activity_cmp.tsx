@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactNode} from "react";
 import {Image, ImageSourcePropType, Pressable, Text, View} from "react-native";
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {activityStyles} from "../styles/activityStyles.ts";
@@ -30,7 +30,7 @@ interface VSpaceProps {
     margin?: number
 }
 export const VSpace = (props: VSpaceProps): React.JSX.Element => {
-    return <View style={{marginVertical: props.margin ?? 45}}/>
+    return <View style={{marginVertical: props.margin ?? 30}}/>
 }
 
 interface WarningModalProps {

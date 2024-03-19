@@ -17,15 +17,18 @@ function App(): React.JSX.Element {
 
   JsonFS.getInstance() // Create instance to get configFile and outputFile
 
-  RNFS.exists(configFile).then((res) => conf = res)
-  RNFS.exists(outputFile).then((res) => outp = res)
-
-  if(!conf && !outp){
-    console.debug("First time launching app, init...")
-    initApp()
-  }else if(!conf || !outp){
-    throw new Error("One of the two files is missing !")
-  }
+  RNFS.exists(configFile).then((res) => {
+    conf = res
+    RNFS.exists(outputFile).then((res) => {
+      outp = res
+      if(!conf && !outp){
+        console.debug("First time launching app, init...")
+        initApp()
+      }else if(!conf || !outp){
+        throw new Error("One of the two files is missing !")
+      }
+    })
+  })
 
   return (
       <StackNavigator/>

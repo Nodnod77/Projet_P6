@@ -50,9 +50,7 @@ export default function initApp() {
 
     RNFS.writeFile(
         outputFile,
-        `{
-            "output": []
-        }`
+        `{"output": []}`
     )
         .catch((err) => {
             console.error("Couldnt create output file, failure...")
