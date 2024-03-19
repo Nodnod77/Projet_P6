@@ -11,7 +11,7 @@ import {
     ModalActivity,
     VSpace, WarningModal
 } from "../components/activity_cmp.tsx";
-import {styles} from "../styles/activityStyles.ts";
+import {activityStyles} from "../styles/activityStyles.ts";
 import {outputT, userData} from "../types/dataTypes.tsx";
 import {StackParamList} from "../components/navigation/StackNavigator.tsx";
 import { RouteProp } from '@react-navigation/native';
@@ -45,13 +45,13 @@ function Activity({ route }: ActivityProps): React.ReactElement{
             <VSpace margin={24}/>
             <View style={{flexDirection: "row"}}>
                 <Image source={require('../styles/assets/id-card.png')} style={{width: 70, height: 70}} />
-                <Text style={[styles.text, {color: "#000"}]}>
+                <Text style={[activityStyles.text, {color: "#000"}]}>
                     {name} {surname}
                 </Text>
             </View>
             <VSpace margin={6}/>
             <View>
-                <Text style={styles.text}>Veuillez renseigner les champs suivants :</Text>
+                <Text style={activityStyles.text}>Veuillez renseigner les champs suivants :</Text>
             </View>
             <View style={{marginLeft: 30}}>
                 <VSpace margin={30}/>
@@ -79,7 +79,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                 <VSpace/>
                 {started ?
                     <><Pressable
-                        style={styles.buttonEnd}
+                        style={activityStyles.buttonEnd}
                         onPress={() => {
                             // Save into json
                             let entry: outputT = {
@@ -97,24 +97,25 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                             // Switch buttons
                             setStarted(false)
                         }}>
-                        <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 40}]}>
+                        <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: 40}]}>
                             Finir activité en cours
                         </Text>
                     </Pressable>
                     <Pressable
-                        style={styles.buttonCancel}
+                        style={activityStyles.buttonCancel}
                         onPress={() => {
                             // Popup Alert to confirm
                             setModalVisible(true)
                         }}>
-                        <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 30}]}>
+                        <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: 30}]}>
                             Annuler
                         </Text>
                     </Pressable>
-                    <WarningModal modalVisible={modalVisible} setWarningModalVisible={setModalVisible} setStarted={setStarted} /></>
+                    <WarningModal modalVisible={modalVisible} setWarningModalVisible={setModalVisible}
+                                  setStarted={setStarted} /></>
                     :
                     <Pressable
-                        style={styles.buttonStart}
+                        style={activityStyles.buttonStart}
                         onPress={() => {
                             if(lieu !== "" && activite !== "") {
                                 setStartTime(Date.now) // Timer
@@ -126,7 +127,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                                 )
                             }
                         }}>
-                        <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 60}]}>
+                        <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: 60}]}>
                             🏁 Commencer
                         </Text>
                     </Pressable>
