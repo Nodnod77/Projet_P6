@@ -42,6 +42,7 @@ export default class JsonFS {
         RNFS.readFile(configFile)
             .then((result) => {
                 JsonFS.config = JSON.parse(result).config
+                console.log ("json.config.utilisateurs :  " , JsonFS.config)
                 first = true
                 if(first && second) JsonFS.isLoaded = true
             })
@@ -68,7 +69,7 @@ export default class JsonFS {
     private write(file: string) {
         RNFS.writeFile(
             file === "config" ? configFile : outputFile,
-            `{${file}: ${JSON.stringify(file === "config" ? JsonFS.config : JsonFS.output)}}`
+            `{"${file}": ${JSON.stringify(file === "config" ? JsonFS.config : JsonFS.output)}}`
         )
             .catch((err) => {
                 console.error(`Couldn't append to ${file} file, see below`)

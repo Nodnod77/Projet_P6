@@ -1,6 +1,6 @@
 export interface userData {
-    name:string,
-    surname:string,
+    prenom:string,
+    nom:string,
 }
 
 export interface genericData {
@@ -19,7 +19,7 @@ export type outputT = {
 }
 
 export type configT = {
-    utilisateurs: {prenom: string, nom: string}[],
+    utilisateurs: userData[],
     lieux: string[],
     activites: string[],
     produits: string[],
