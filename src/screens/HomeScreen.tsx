@@ -16,7 +16,7 @@ import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {userData} from "../types/dataTypes";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {CustomRadioButton, NewUserModal, WarningModal} from "../components/homeScreen_cmp";
+import {CrudButton, CustomRadioButton, NewUserModal, WarningModal} from "../components/homeScreen_cmp";
 import JsonFS from "../components/jsonFS";
 
 
@@ -38,6 +38,7 @@ const HomeScreen = ({navigation}:HomeProps) => {
     const [ newSurname , setNewSurname] = React.useState('')
     const [modalVisible, setWarningModalVisible] = useState(false);
     const [newUserModalVisible, setNewUserModalVisible] = useState(false);
+    const [ deleteUser, setDeleteUser] = useState(false);
     const [userTab , setUserTab] = useState([]);
     const [isReload, setIsReload] = useState(false);
 
@@ -70,24 +71,10 @@ const HomeScreen = ({navigation}:HomeProps) => {
     };
     return (
         <SafeAreaView style = {homeStyles.screen}>
-            <View style ={homeStyles.column}>
-                <View style = {{  flexDirection: 'row', justifyContent: 'flex-end' }}>
-                <TouchableOpacity onPress={()=>setNewUserModalVisible(true)} style={homeStyles.newUserButton}>
-                    <View style ={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Icon name="plus" style = {{color : 'white', fontSize : RFPercentage (2)}}></Icon>
-                    <Text style={homeStyles.newUserTextStyle}>  Créer un utilisateur </Text>
-                    </View>
-                </TouchableOpacity>
-                </View>
-            </View>
-            <View style = {{  flexDirection: 'row', justifyContent: 'flex-end' }}>
-                <TouchableOpacity onPress={()=>setNewUserModalVisible(true)} style={homeStyles.newUserButton}>
-                    <View style ={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Icon name="plus" style = {{color : 'white', fontSize : RFPercentage (2)}}></Icon>
-                        <Text style={homeStyles.newUserTextStyle}>  Créer un utilisateur </Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+
+            <CrudButton setModalVisible={setNewUserModalVisible} iconName={"plus"} textButton={'Créer un utilisateur'}/>
+            <CrudButton setModalVisible={setDeleteUser} iconName={"delete"} textButton={'Supprimer un utilisateur'}/>
+
             <NewUserModal modalVisible={newUserModalVisible} onChangeSurname={setNewSurname} onChangeName={setNewName} setModalVisible={setNewUserModalVisible} newSurname={newSurname} newName={newName} setIsReload={setIsReload}   />
             <Text style = {homeStyles.title}>Bienvenue ! 🎈</Text>
 
@@ -100,6 +87,7 @@ const HomeScreen = ({navigation}:HomeProps) => {
                             label={item.prenom + ' ' + item.nom}
                             selected={ name === item.prenom && surname === item.nom}
                             onSelect={() => {setName (item.prenom), setSurname (item.nom)}}
+                            deleteUser={}
                         />
                     )}
                     keyExtractor={(item) => item.prenom + item.nom}

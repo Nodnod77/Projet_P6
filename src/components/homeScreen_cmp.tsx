@@ -17,11 +17,14 @@ interface CustomRadioButtonProps {
     label : String,
     selected : boolean,
     onSelect : ()=> void,
+    deleteUser : boolean,
 }
-export const CustomRadioButton = ({ label , selected, onSelect} : CustomRadioButtonProps) => (
+export const CustomRadioButton = ({ label , selected, onSelect, deleteUser} : CustomRadioButtonProps) => (
     <TouchableOpacity
         style={[homeStyles.radioButton,
-            { backgroundColor: selected ? '#007BFF' : '#FFF' }]}
+            { backgroundColor: (!deleteUser && selected ) ? '#007BFF' : '#FFF' },
+            { backgroundColor: (deleteUser && selected )? 'rgba(255,0,0,0.6)' : '#FFF' }
+        ]}
         onPress={onSelect}
     >
         <Text style={[homeStyles.radioButtonText,
@@ -96,16 +99,19 @@ interface newUserModalProps {
 }
 export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, modalVisible, onChangeSurname, onChangeName, newSurname, newName,setIsReload } ) => {
     //state de la modal input name et surname
-    const [ newUserWarningModalVisible, setNewUserWarningModalVisible] = useState(false);
+    const [newUserWarningModalVisible, setNewUserWarningModalVisible] = useState(false);
 
     function handleCreateUser() {
-        if ( newSurname === '' || newSurname ===' ' && newName === '' || newName === ' '){
+        if (newSurname === '' || newSurname === ' ' && newName === '' || newName === ' ') {
             setNewUserWarningModalVisible(true);
             return;
         }
         const json = JsonFS.getInstance();
-
-        json.addUser(newName, newSurname).then(r => {setModalVisible(false); setIsReload(true);}); // + faire un .then et set la liste des user
+        // // TODO: Vérifier si le user existe déjà
+        json.addUser(newName, newSurname).then(r => {
+            setModalVisible(false);
+            setIsReload(true);
+        }); // + faire un .then et set la liste des user
     }
 
     return (
@@ -119,15 +125,18 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
             }}>
 
             <View style={homeStyles.modalCenterView}>
-                <WarningModal modalVisible={newUserWarningModalVisible} setWarningModalVisible={setNewUserWarningModalVisible} warningLabel={"⚠️ Veuillez indiquer votre nom et prénom ❗"}/>
+                <WarningModal modalVisible={newUserWarningModalVisible}
+                              setWarningModalVisible={setNewUserWarningModalVisible}
+                              warningLabel={"⚠️ Veuillez indiquer votre nom et prénom ❗"}/>
                 <View style={[homeStyles.homeModalView, homeStyles.newUserPadding]}>
-                    <TouchableOpacity  style = {homeStyles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
-                    <Icon name = "close" style = {homeStyles.closeIcon}></Icon>
-                    </TouchableOpacity >
-                    <Icon name={ 'user'} style ={{ color : 'black', fontSize : RFPercentage(4)}}></Icon>
-                    <Text style ={homeStyles.mediumTitle}>Création d'un utilisateur</Text>
-                    <Text style ={homeStyles.infoLabel}>Veuillez renseignez votre nom et prénom</Text>
-                <InfoInput onChangeName ={onChangeName} onChangeSurname ={onChangeSurname} newName={newName} newSurname={newSurname}/>
+                    <TouchableOpacity style={homeStyles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
+                        <Icon name="close" style={homeStyles.closeIcon}></Icon>
+                    </TouchableOpacity>
+                    <Icon name={'user'} style={{color: 'black', fontSize: RFPercentage(4)}}></Icon>
+                    <Text style={homeStyles.mediumTitle}>Création d'un utilisateur</Text>
+                    <Text style={homeStyles.infoLabel}>Veuillez renseignez votre nom et prénom</Text>
+                    <InfoInput onChangeName={onChangeName} onChangeSurname={onChangeSurname} newName={newName}
+                               newSurname={newSurname}/>
                     <Pressable
                         style={[homeStyles.modalButton]}
                         onPress={handleCreateUser}>
@@ -136,5 +145,22 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
                 </View>
             </View>
         </Modal>
+    );
+}
+    interface crudButtonProps {
+    setModalVisible : (String) => void,
+        iconName : String,
+        textButton : String,
+    }
+export const CrudButton = ({setModalVisible, iconName,  textButton}: crudButtonProps) => {
+    return (
+        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={homeStyles.newUserButton}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Icon name={iconName} style={{color: 'white', fontSize: RFPercentage(2)}}></Icon>
+                    <Text style={homeStyles.newUserTextStyle}> {textButton} </Text>
+                </View>
+            </TouchableOpacity>
+        </View>
     );
 };
