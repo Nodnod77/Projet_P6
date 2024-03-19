@@ -12,7 +12,7 @@ import {
     VSpace, WarningModal
 } from "../components/activity_cmp.tsx";
 import {styles} from "../styles/activityStyles.ts";
-import {outputT, dataTypes} from "../types/dataTypes.tsx";
+import {outputT, userData} from "../types/dataTypes.tsx";
 import {StackParamList} from "../components/navigation/StackNavigator.tsx";
 import { RouteProp } from '@react-navigation/native';
 import JsonFS from "../components/jsonFS.ts";
@@ -26,7 +26,7 @@ interface ActivityProps {
 function Activity({ route }: ActivityProps): React.ReactElement{
     const [started, setStarted] = useState(false)
     const [startTime, setStartTime] = useState(0)
-    const { name, surname }: dataTypes = route.params.user;
+    const { name, surname }: userData = route.params.user;
 
     // Data for json output
     const [lieu, setLieu] = useState("")
@@ -90,7 +90,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                                 produits: produits,
                                 pratiques: utilisation,
                                 date_debut: new Date(startTime).toISOString(),
-                                duree: Math.floor(Date.now() - startTime / 1000) // From ms to seconds
+                                duree: Math.floor((Date.now() - startTime) / 1000) // From ms to seconds
                             }
                             jsHandle.addEntry(entry)
 
