@@ -226,7 +226,6 @@ export const homeStyles = StyleSheet.create({
         fontSize : RFPercentage (2),
     },
     homeModalView: {
-        //margin: RFPercentage(0),
         backgroundColor: 'white',
         borderRadius: RFPercentage (3),
         padding: RFPercentage(2),
@@ -234,9 +233,13 @@ export const homeStyles = StyleSheet.create({
         shadowColor: '#be2c54',
         shadowRadius: RFPercentage (4),
         elevation: RFPercentage(2),
+    },
+    warningPadding :{
+       padding:RFPercentage(7),
+    },
+    newUserPadding :{
         paddingBottom : RFPercentage (5),
     },
-
     newUserButton :{
         borderRadius: RFPercentage (2.5),
         padding: RFPercentage(2),

@@ -20,7 +20,7 @@ export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisi
                 setWarningModalVisible(!modalVisible);
             }}>
             <View style={homeStyles.modalCenterView}>
-                <View style={homeStyles.homeModalView}>
+                <View style={[homeStyles.homeModalView, homeStyles.warningMargin]}>
                     {/*<FontAwesome name="exclamation-circle" style ={styles.iconContainer} />*/}
                     <Text style={{marginBottom: 15, textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>Veuillez
                         sélectionner un utilisateur❗</Text>
@@ -81,7 +81,7 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
 
             <View style={homeStyles.modalCenterView}>
 
-                <View style={homeStyles.homeModalView}>
+                <View style={[homeStyles.homeModalView, homeStyles.newUserPadding]}>
                     <TouchableOpacity  style = {homeStyles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
                     <Icon name = "close" style = {homeStyles.closeIcon}></Icon>
                     </TouchableOpacity >
