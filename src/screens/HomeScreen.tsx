@@ -14,14 +14,12 @@ import {StackParamList} from "../components/navigation/StackNavigator";
 import {StackNavigationProp} from "@react-navigation/stack";
 import { Button } from 'react-native';
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
-import {userData} from "../types/userData";
+import {userData} from "../types/dataTypes";
 import ResponsiveFontSize from 'react-native-responsive-fontsize';
 import { RFPercentage } from "react-native-responsive-fontsize";
 import {styles} from "../styles/activityStyles";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {NewUserModal, WarningModal} from "../components/homeScreen_cmp";
-
-
 
 
 
@@ -81,7 +79,7 @@ const HomeScreen = ({navigation}:HomeProps) => {
                 </View>
             </TouchableOpacity>
             </View>
-            <NewUserModal modalVisible={newUserModalVisible} onChangeSurname={setNewSurname} onChangeName={setNewName} setModalVisible={setNewUserModalVisible} />
+            <NewUserModal modalVisible={newUserModalVisible} onChangeSurname={setNewSurname} onChangeName={setNewName} setModalVisible={setNewUserModalVisible} newSurname={newSurname} newName={newName} />
             <Text style = {homeStyles.title}>Bienvenue ! 🎈</Text>
 
             <Text style ={homeStyles.text}> Sélectionnez un utilisateur :</Text>
@@ -228,14 +226,15 @@ export const homeStyles = StyleSheet.create({
         fontSize : RFPercentage (2),
     },
     homeModalView: {
-        margin: RFPercentage(5),
+        //margin: RFPercentage(0),
         backgroundColor: 'white',
         borderRadius: RFPercentage (3),
-        padding: RFPercentage(6),
+        padding: RFPercentage(2),
         alignItems: 'center',
         shadowColor: '#be2c54',
         shadowRadius: RFPercentage (4),
         elevation: RFPercentage(2),
+        paddingBottom : RFPercentage (5),
     },
 
     newUserButton :{
@@ -246,6 +245,20 @@ export const homeStyles = StyleSheet.create({
         marginTop: RFPercentage (2),
         marginHorizontal: RFPercentage(2),
         width : 'fit-content'
+    },
+    closeIcon :
+        {
+            fontSize : RFPercentage (4),
+        },
+    buttonClose :
+        {
+            flexDirection : 'row',
+            alignSelf : 'flex-end',
+        },
+    mediumTitle :{
+        fontWeight: 'bold',
+        fontSize : RFPercentage(3),
+        color : 'black'
     }
 
 
