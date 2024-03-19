@@ -1,5 +1,5 @@
 import React from "react";
-import {Alert, Image, ImageSourcePropType, Modal, Pressable, Text, TouchableOpacity, View} from "react-native";
+import {Image, ImageSourcePropType, Pressable, Text, View} from "react-native";
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {activityStyles} from "../styles/activityStyles.ts";
 import {genericData} from "../types/dataTypes.tsx";
