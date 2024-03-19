@@ -1,4 +1,4 @@
-export interface dataTypes {
+export interface userData {
     name:string,
     surname:string,
 }

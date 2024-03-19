@@ -4,6 +4,8 @@ import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {styles} from "../styles/activityStyles.ts";
 import {genericData} from "../types/dataTypes.tsx";
 import {RFPercentage} from "react-native-responsive-fontsize";
+import {homeStyles} from "../screens/HomeScreen.tsx";
+import {CommonModal} from "./commonModal.tsx";
 
 const renderItem = (
     item: genericData
@@ -31,13 +33,40 @@ export const VSpace = (props: VSpaceProps): React.JSX.Element => {
     return <View style={{marginVertical: props.margin ?? 45}}/>
 }
 
-const ExitModal = ({setModalVisible}: any): React.JSX.Element => {
-    return <TouchableOpacity
-        style={styles.exitModal}
-        onPress={() => {
-            setModalVisible(false)
-        }}>
-    </TouchableOpacity>
+interface WarningModalProps {
+    modalVisible : boolean,
+    setWarningModalVisible : (a: boolean) => void,
+    setStarted: (a: boolean) => void
+}
+export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisible, modalVisible, setStarted }) => {
+    return (
+        <CommonModal modalVisible={modalVisible} setModalVisible={setWarningModalVisible}>
+            <Text style={{marginBottom: 15, textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>
+                ⚠️ Attention ⚠
+            </Text>
+            <Text style={{marginBottom: 15, textAlign: 'center', color: 'black', fontSize: RFPercentage(2)}}>
+                Si vous annuler cette session, les données liés à cette dernière ne seront pas enregistrés.
+                Voulez vous vraiment annuler cette session ?
+            </Text>
+            <View style={{flexDirection: "row"}}>
+                <Pressable
+                    style={[homeStyles.modalButton, {marginHorizontal: RFPercentage(3)}]}
+                    onPress={() => {
+                        setWarningModalVisible(false)
+                        setStarted(false)
+                    }}>
+                    <Text style={homeStyles.modalTextStyle}>Oui</Text>
+                </Pressable>
+                <Pressable
+                    style={[homeStyles.modalButton, {marginHorizontal: RFPercentage(3)}]}
+                    onPress={() => {
+                        setWarningModalVisible(false)
+                    }}>
+                    <Text style={homeStyles.modalTextStyle}>Non</Text>
+                </Pressable>
+            </View>
+        </CommonModal>
+    );
 }
 
 interface ModalActivityProps {
@@ -52,46 +81,31 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
 
     return (
         <View style={{width: "55%", justifyContent: "center", alignItems: "center"}}>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                    setModalVisible(!modalVisible);
-                }}
-                style={{justifyContent: "center", alignItems: "center", alignContent: "center"}}>
-                <ExitModal setModalVisible={setModalVisible}/>
-                <View style={styles.centeredView}>
-                    <ExitModal setModalVisible={setModalVisible}/>
-                    <View style={styles.modalView}>
-                        <MultiSelect
-                            style={[styles.dropdown, {padding: RFPercentage(0.4), width: "90%"}]}
-                            itemContainerStyle={styles.itemContainer}
-                            containerStyle={{padding: RFPercentage(0.6)}}
-                            data={dataAsObj}
-                            labelField="label"
-                            valueField="label"
-                            placeholder="   ..."
-                            value={props.value}
-                            search
-                            maxHeight={RFPercentage(32)}
-                            searchPlaceholder="Rechercher..."
-                            onChange={(item: string[]) => props.setValue(item)}
-                            inside
-                            renderItem={renderItem}
-                            renderSelectedItem={renderSelectedItem}
-                        />
-                        <Pressable
-                            style={[styles.buttonClose]}
-                            onPress={() => setModalVisible(!modalVisible)}>
-                            <Image source={require("../styles/assets/cross.png")} style={{width: 30, height: 30}} />
-                        </Pressable>
-                    </View>
-                    <ExitModal setModalVisible={setModalVisible}/>
-                </View>
-                <ExitModal setModalVisible={setModalVisible}/>
-            </Modal>
+            <CommonModal modalVisible={modalVisible} setModalVisible={setModalVisible}
+                         modalViewStyle={{flexDirection: "row"}}>
+                <MultiSelect
+                    style={[styles.dropdown, {padding: RFPercentage(0.4), width: "90%"}]}
+                    itemContainerStyle={styles.itemContainer}
+                    containerStyle={{padding: RFPercentage(0.6)}}
+                    data={dataAsObj}
+                    labelField="label"
+                    valueField="label"
+                    placeholder="   ..."
+                    value={props.value}
+                    search
+                    maxHeight={RFPercentage(32)}
+                    searchPlaceholder="Rechercher..."
+                    onChange={(item: string[]) => props.setValue(item)}
+                    inside
+                    renderItem={renderItem}
+                    renderSelectedItem={renderSelectedItem}
+                />
+                <Pressable
+                    style={[styles.buttonClose, {alignSelf: "flex-start"}]}
+                    onPress={() => setModalVisible(!modalVisible)}>
+                    <Image source={require("../styles/assets/cross.png")} style={{width: 30, height: 30}} />
+                </Pressable>
+            </CommonModal>
             <Pressable
                 style={styles.buttonOpen}
                 onPress={() => setModalVisible(true)}>

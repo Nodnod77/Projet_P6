@@ -9,7 +9,7 @@ import {
     DropList,
     InputLine,
     ModalActivity,
-    VSpace
+    VSpace, WarningModal
 } from "../components/activity_cmp.tsx";
 import {styles} from "../styles/activityStyles.ts";
 import {outputT, dataTypes} from "../types/dataTypes.tsx";
@@ -36,6 +36,9 @@ function Activity({ route }: ActivityProps): React.ReactElement{
 
     // JSON handler
     const jsHandle = JsonFS.getInstance()
+
+    // Warning modal
+    const [modalVisible, setModalVisible] = useState(false)
 
     return (
         <View style={{paddingHorizontal: 40, width: Dimensions.get('window').width}}>
@@ -102,23 +105,13 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                         style={styles.buttonCancel}
                         onPress={() => {
                             // Popup Alert to confirm
-                            Alert.alert(
-                                '⚠️ Attention ⚠️',
-                                'Si vous annuler cette session, les données liés à cette dernière ne seront pas' +
-                                ' enregistrés.\n' +
-                                'Voulez vous vraiment annuler cette session ?',
-                                [{
-                                    text: 'Oui',
-                                    onPress: () => setStarted(false),
-                                    style: 'cancel',
-                                }],
-                                {cancelable: true}
-                            )
+                            setModalVisible(true)
                         }}>
                         <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 30}]}>
                             Annuler
                         </Text>
-                    </Pressable></>
+                    </Pressable>
+                    <WarningModal modalVisible={modalVisible} setWarningModalVisible={setModalVisible} setStarted={setStarted} /></>
                     :
                     <Pressable
                         style={styles.buttonStart}

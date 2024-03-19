@@ -46,20 +46,6 @@ export const styles = StyleSheet.create({
         fontSize: RFPercentage(1.6),
         paddingHorizontal: RFPercentage(0.8)
     },
-    centeredView: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row'
-    },
-    modalView: {
-        width: RFPercentage(50),
-        height: RFPercentage(50),
-        flexDirection: "row",
-        backgroundColor: 'white',
-        borderRadius: RFPercentage(2),
-        padding: RFPercentage(1.9),
-        elevation: 5,
-    },
     buttonOpen: {
         backgroundColor: '#2D9BF0',
         borderRadius: RFPercentage(1.5),
@@ -70,12 +56,6 @@ export const styles = StyleSheet.create({
     buttonClose: {
         borderRadius: 100,
         padding: RFPercentage(1.4),
-    },
-    exitModal: {
-        flex: 1,
-        width: "100%",
-        height: "100%",
-        //backgroundColor: "rgba(0, 0, 0, 0.4)" // Make it visible if needed
     },
     buttonStart: {
         height: RFPercentage(16),
