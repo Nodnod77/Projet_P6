@@ -20,10 +20,16 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 import {styles} from "../styles/activityStyles";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {NewUserModal, WarningModal} from "../components/homeScreen_cmp";
+import JsonFS from "../components/jsonFS";
 
 
 
-type HomeProps =  NativeStackScreenProps<StackParamList, 'HomeScreen'>;
+interface HomeProps  {
+    navigation : NativeStackScreenProps<StackParamList, 'HomeScreen'>,
+    userTab : userData[],
+};
+
+
 
 
 
@@ -45,7 +51,11 @@ const CustomRadioButton = ({ label , selected, onSelect} : CustomRadioButtonProp
         </Text>
     </TouchableOpacity>
 );
-
+const initUserTab =()=>{
+    const json = JsonFS.getInstance();
+    console.log('initiTab2: ',json.config.utilisateurs)
+    return (json.config.utilisateurs);
+}
 
 
 const HomeScreen = ({navigation}:HomeProps) => {
@@ -57,15 +67,17 @@ const HomeScreen = ({navigation}:HomeProps) => {
     const [ newSurname , setNewSurname] = React.useState('')
     const [modalVisible, setWarningModalVisible] = useState(false);
     const [newUserModalVisible, setNewUserModalVisible] = useState(false);
+    const [userTab , setUserTab] = useState(initUserTab)
 
     const handleStartActivity = () => {
         if ( name == '' || surname ==''){
             setWarningModalVisible(true);
             return;
         }
+        // c'est l'utilisateur selectionner
         const userData: userData = {
-            name: name,
-            surname: surname,
+            prenom: name,
+            nom: surname,
         };
         navigation.navigate("ActivityScreen", {user: userData});
     };
@@ -79,32 +91,24 @@ const HomeScreen = ({navigation}:HomeProps) => {
                 </View>
             </TouchableOpacity>
             </View>
-            <NewUserModal modalVisible={newUserModalVisible} onChangeSurname={setNewSurname} onChangeName={setNewName} setModalVisible={setNewUserModalVisible} newSurname={newSurname} newName={newName} />
+            <NewUserModal modalVisible={newUserModalVisible} onChangeSurname={setNewSurname} onChangeName={setNewName} setModalVisible={setNewUserModalVisible} newSurname={newSurname} newName={newName}   />
             <Text style = {homeStyles.title}>Bienvenue ! 🎈</Text>
 
             <Text style ={homeStyles.text}> Sélectionnez un utilisateur :</Text>
             <View style = {homeStyles.list}>
                 <FlatList
-                    data={[
-                        { userData: { name: 'Devin', surname: 'Smith' }},
-                        { userData: { name: 'Dan', surname: 'Johnson' } },
-                        { userData: { name: 'Dominic', surname: 'Brown' }},
-                        { userData: { name: 'Devin2', surname: 'Smith' }},
-                        { userData: { name: 'Dan2', surname: 'Johnson' } },
-                        { userData: { name: 'Dominic2', surname: 'Brown' }},
-
-                    ]}
+                    data={userTab}
                     renderItem={({ item }) => (
                         <CustomRadioButton
-                            label={item.userData.name + ' ' + item.userData.surname}
-                            selected={ name === item.userData.name && surname === item.userData.surname}
-                            onSelect={() => {setName (item.userData.name), setSurname (item.userData.surname)}}
+                            label={item.prenom + ' ' + item.nom}
+                            selected={ name === item.prenom && surname === item.nom}
+                            onSelect={() => {setName (item.prenom), setSurname (item.nom)}}
                         />
                     )}
-                    keyExtractor={(item) => item.userData.name + item.userData.surname}
+                    keyExtractor={(item) => item.prenom + item.nom}
                 />
             </View>
-            <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible}/>
+            <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible} warningLabel={"Veuillez sélectionner un utilisateur❗"}/>
             <TouchableOpacity onPress={()=>handleStartActivity()} style={homeStyles.button}>
                 <Text style={homeStyles.buttonText}> 🚀 Démarrer une activité</Text>
             </TouchableOpacity>
@@ -151,7 +155,8 @@ export const homeStyles = StyleSheet.create({
         borderWidth: 2,
         borderRadius:11,
         padding: RFPercentage(1),
-        margin : RFPercentage(0.5)
+        margin : RFPercentage(0.5),
+        fontSize : RFPercentage (2)
     },
     label :{
         marginRight: RFPercentage (2),
@@ -235,7 +240,7 @@ export const homeStyles = StyleSheet.create({
         elevation: RFPercentage(2),
     },
     warningPadding :{
-       padding:RFPercentage(7),
+       padding:RFPercentage(5),
     },
     newUserPadding :{
         paddingBottom : RFPercentage (5),

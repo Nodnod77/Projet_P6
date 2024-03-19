@@ -10,6 +10,10 @@ export default function initApp() {
                     {
                         "prenom": "Alex",
                         "nom": "AALLEEXX"
+                    },
+                    {
+                        "prenom": "Alex2",
+                        "nom": "AALLEEXX2"
                     }
                 ],
                 "lieux": [
