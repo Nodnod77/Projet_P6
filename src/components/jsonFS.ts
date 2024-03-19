@@ -71,7 +71,7 @@ export default class JsonFS {
             `{${file}: ${JSON.stringify(file === "config" ? JsonFS.config : JsonFS.output)}}`
         )
             .catch((err) => {
-                console.error(`Couldn't add user to ${file} file, see below`)
+                console.error(`Couldn't append to ${file} file, see below`)
                 console.error(err.toString())
             })
     }
@@ -128,7 +128,7 @@ export default class JsonFS {
             await new Promise(f => setTimeout(f, 10));
         }
 
-        console.debug(entry)
+        console.debug(entry) // TODO: Remove me
         JsonFS.output.push(entry)
         this.write("output")
     }

@@ -1,7 +1,7 @@
 import React from "react";
 import {Alert, Image, ImageSourcePropType, Modal, Pressable, Text, TouchableOpacity, View} from "react-native";
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
-import {styles} from "../styles/activityStyles.ts";
+import {activityStyles} from "../styles/activityStyles.ts";
 import {genericData} from "../types/dataTypes.tsx";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import {homeStyles} from "../screens/HomeScreen.tsx";
@@ -12,7 +12,7 @@ const renderItem = (
 ): React.JSX.Element => {
     return (
         <View style={{marginRight: 5}}>
-            <Text style={styles.selectableText}>{item.label}</Text>
+            <Text style={activityStyles.selectableText}>{item.label}</Text>
         </View>
     );
 };
@@ -20,8 +20,8 @@ const renderItem = (
 const renderSelectedItem = (
     item: genericData,
 ): React.JSX.Element => (
-    <View style={styles.selectedContainer}>
-        <Text style={styles.selectableText}>{item.label}</Text>
+    <View style={activityStyles.selectedContainer}>
+        <Text style={activityStyles.selectableText}>{item.label}</Text>
         <Image source={require("../styles/assets/cross.png")} style={{width: 15, height: 15, opacity: 0.6}} />
     </View>
 )
@@ -84,8 +84,8 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
             <CommonModal modalVisible={modalVisible} setModalVisible={setModalVisible}
                          modalViewStyle={{flexDirection: "row"}}>
                 <MultiSelect
-                    style={[styles.dropdown, {padding: RFPercentage(0.4), width: "90%"}]}
-                    itemContainerStyle={styles.itemContainer}
+                    style={[activityStyles.dropdown, {padding: RFPercentage(0.4), width: "90%"}]}
+                    itemContainerStyle={activityStyles.itemContainer}
                     containerStyle={{padding: RFPercentage(0.6)}}
                     data={dataAsObj}
                     labelField="label"
@@ -101,15 +101,15 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
                     renderSelectedItem={renderSelectedItem}
                 />
                 <Pressable
-                    style={[styles.buttonClose, {alignSelf: "flex-start"}]}
+                    style={[activityStyles.buttonClose, {alignSelf: "flex-start"}]}
                     onPress={() => setModalVisible(!modalVisible)}>
                     <Image source={require("../styles/assets/cross.png")} style={{width: 30, height: 30}} />
                 </Pressable>
             </CommonModal>
             <Pressable
-                style={styles.buttonOpen}
+                style={activityStyles.buttonOpen}
                 onPress={() => setModalVisible(true)}>
-                <Text style={[styles.text, {color: "white", fontWeight: "bold", fontSize: 24, textAlign: "center"}]}>
+                <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: 24, textAlign: "center"}]}>
                     Sélectionner {props.name.toLowerCase()}
                 </Text>
             </Pressable>
@@ -128,9 +128,9 @@ export const DropList = (props: DropListProps): React.JSX.Element => {
 
     return (
         <Dropdown
-            style={styles.dropdown}
-            itemTextStyle={[styles.itemTextStyle, {color: "#000"}]}
-            selectedTextStyle={[styles.itemTextStyle, {color: "#000"}]}
+            style={activityStyles.dropdown}
+            itemTextStyle={[activityStyles.itemTextStyle, {color: "#000"}]}
+            selectedTextStyle={[activityStyles.itemTextStyle, {color: "#000"}]}
             data={dataAsObj}
             search
             maxHeight={RFPercentage(25)}
@@ -155,7 +155,7 @@ export const InputLine = (props: InputLineProps): React.JSX.Element => {
     return (
         <View style={{flexDirection: "row"}}>
             <Image source={props.icon} style={{width: 70, height: 70}} />
-            <Text style={[styles.text, {color: "#000"}, {width: 180}]}>{props.name}</Text>
+            <Text style={[activityStyles.text, {color: "#000"}, {width: 180}]}>{props.name}</Text>
             {props.children}
         </View>
     )

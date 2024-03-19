@@ -1,7 +1,7 @@
 import {StyleSheet} from "react-native";
 import {RFPercentage} from "react-native-responsive-fontsize";
 
-export const styles = StyleSheet.create({
+export const activityStyles = StyleSheet.create({
     text: {
         fontSize: RFPercentage(2.4),
         textAlignVertical: "center",
