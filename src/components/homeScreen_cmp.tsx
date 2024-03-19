@@ -1,23 +1,22 @@
 import React, {useState} from "react";
 import {homeStyles} from "../screens/HomeScreen";
-import {Alert, Modal, Pressable, View, Text, TextInput, TouchableOpacity} from "react-native";
+import {Pressable, View, Text, TextInput, TouchableOpacity} from "react-native";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import Icon from 'react-native-vector-icons/FontAwesome';
 interface WarningModalProps {
     modalVisible : boolean,
-    setWarningModalVisible : (boolean) => void,
-    warningLabel : String,
+    setWarningModalVisible : (arg0: boolean) => void,
+    warningLabel : string,
 }
 import JsonFS from './jsonFS';
-import {StackParamList} from "./navigation/StackNavigator";
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {CommonModal} from "./commonModal.tsx";
 
 
 interface CustomRadioButtonProps {
-    label : String,
+    label : string,
     selected : boolean,
     onSelect : ()=> void,
-    deleteUser : boolean,
+    deleteUser?: boolean,
 }
 export const CustomRadioButton = ({ label , selected, onSelect, deleteUser} : CustomRadioButtonProps) => (
     <TouchableOpacity
@@ -37,38 +36,25 @@ export const CustomRadioButton = ({ label , selected, onSelect, deleteUser} : Cu
 
 
 export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisible, modalVisible,warningLabel }) => {
-
     return (
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
-                setWarningModalVisible(!modalVisible);
-            }}>
-            <View style={homeStyles.modalCenterView}>
-                <View style={[homeStyles.homeModalView, homeStyles.warningPadding]}>
-                    {/*<FontAwesome name="exclamation-circle" style ={styles.iconContainer} />*/}
-                    <Text style={{marginBottom: 15, textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>{warningLabel}</Text>
-                    <Pressable
-                        style={[homeStyles.modalButton]}
-                        onPress={() => setWarningModalVisible(!modalVisible)}>
-                        <Text style={homeStyles.modalTextStyle}>Fermer</Text>
-                    </Pressable>
-                </View>
-            </View>
-        </Modal>
+        <CommonModal modalVisible={modalVisible} setModalVisible={setWarningModalVisible} modalViewStyle={{width: RFPercentage(40)}}>
+            <Text style={{marginBottom: 15, textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>{warningLabel}</Text>
+            <Pressable
+                style={[homeStyles.modalButton]}
+                onPress={() => setWarningModalVisible(!modalVisible)}>
+                <Text style={homeStyles.modalTextStyle}>Fermer</Text>
+            </Pressable>
+        </CommonModal>
     );
 };
 
 
 
 interface infoInputProps {
-    onChangeName : (text : String) => void,
-    onChangeSurname : (text : String) => void,
-    newSurname : String,
-    newName : String,
+    onChangeName : (text : string) => void,
+    onChangeSurname : (text : string) => void,
+    newSurname : string,
+    newName : string,
 }
  const InfoInput = ({ onChangeName, onChangeSurname, newSurname , newName }: infoInputProps)=> {
 
@@ -88,14 +74,12 @@ interface infoInputProps {
 
 interface newUserModalProps {
     modalVisible : boolean,
-    setModalVisible : (boolean) => void,
-    onChangeName : (String) => void,
-    onChangeSurname : (String) => void,
-    newName : String,
-    newSurname : String,
-    setIsReload : (boolean)=> void,
-
-
+    setModalVisible : (arg0: boolean) => void,
+    onChangeName : (arg0: string) => void,
+    onChangeSurname : (arg0: string) => void,
+    newName : string,
+    newSurname : string,
+    setIsReload : (arg0: boolean)=> void,
 }
 export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, modalVisible, onChangeSurname, onChangeName, newSurname, newName,setIsReload } ) => {
     //state de la modal input name et surname
@@ -108,49 +92,37 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
         }
         const json = JsonFS.getInstance();
         // // TODO: Vérifier si le user existe déjà
-        json.addUser(newName, newSurname).then(r => {
+        json.addUser(newName, newSurname).then(() => {
             setModalVisible(false);
             setIsReload(true);
         }); // + faire un .then et set la liste des user
     }
 
     return (
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
-                setModalVisible(!modalVisible);
-            }}>
-
-            <View style={homeStyles.modalCenterView}>
-                <WarningModal modalVisible={newUserWarningModalVisible}
-                              setWarningModalVisible={setNewUserWarningModalVisible}
-                              warningLabel={"⚠️ Veuillez indiquer votre nom et prénom ❗"}/>
-                <View style={[homeStyles.homeModalView, homeStyles.newUserPadding]}>
-                    <TouchableOpacity style={homeStyles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
-                        <Icon name="close" style={homeStyles.closeIcon}></Icon>
-                    </TouchableOpacity>
-                    <Icon name={'user'} style={{color: 'black', fontSize: RFPercentage(4)}}></Icon>
-                    <Text style={homeStyles.mediumTitle}>Création d'un utilisateur</Text>
-                    <Text style={homeStyles.infoLabel}>Veuillez renseignez votre nom et prénom</Text>
-                    <InfoInput onChangeName={onChangeName} onChangeSurname={onChangeSurname} newName={newName}
-                               newSurname={newSurname}/>
-                    <Pressable
-                        style={[homeStyles.modalButton]}
-                        onPress={handleCreateUser}>
-                        <Text style={homeStyles.modalTextStyle}>Valider</Text>
-                    </Pressable>
-                </View>
-            </View>
-        </Modal>
+        <CommonModal modalVisible={modalVisible} setModalVisible={setModalVisible} >
+            <WarningModal modalVisible={newUserWarningModalVisible}
+                          setWarningModalVisible={setNewUserWarningModalVisible}
+                          warningLabel={"⚠️ Veuillez indiquer votre nom et prénom ❗"}/>
+            <TouchableOpacity style={homeStyles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
+                <Icon name="close" style={homeStyles.closeIcon}></Icon>
+            </TouchableOpacity>
+            <Icon name={'user'} style={{color: 'black', fontSize: RFPercentage(4)}}></Icon>
+            <Text style={homeStyles.mediumTitle}>Création d'un utilisateur</Text>
+            <Text style={homeStyles.infoLabel}>Veuillez renseignez votre nom et prénom</Text>
+            <InfoInput onChangeName={onChangeName} onChangeSurname={onChangeSurname} newName={newName}
+                       newSurname={newSurname}/>
+            <Pressable
+                style={[homeStyles.modalButton, {marginBottom: RFPercentage(3)}]}
+                onPress={handleCreateUser}>
+                <Text style={homeStyles.modalTextStyle}>Valider</Text>
+            </Pressable>
+        </CommonModal>
     );
 }
     interface crudButtonProps {
-    setModalVisible : (String) => void,
-        iconName : String,
-        textButton : String,
+    setModalVisible : (arg0: boolean) => void,
+        iconName : string,
+        textButton : string,
     }
 export const CrudButton = ({setModalVisible, iconName,  textButton}: crudButtonProps) => {
     return (

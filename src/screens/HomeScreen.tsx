@@ -1,34 +1,25 @@
 import React, {useState} from 'react';
 import {
-    Pressable,
     SafeAreaView,
     StyleSheet,
-    TextInput,
     View,
     TouchableOpacity,
-    FlatList,
-    ScrollView, Alert, Modal
+    FlatList
 } from 'react-native';
 import {Text} from 'react-native';
 import {StackParamList} from "../components/navigation/StackNavigator";
 
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {userData} from "../types/dataTypes";
 import { RFPercentage } from "react-native-responsive-fontsize";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {CrudButton, CustomRadioButton, NewUserModal, WarningModal} from "../components/homeScreen_cmp";
 import JsonFS from "../components/jsonFS";
+import {NavigationProp} from "@react-navigation/native";
 
 
 
 interface HomeProps  {
-    navigation : NativeStackScreenProps<StackParamList, 'HomeScreen'>,
-};
-
-
-
-
-
+    navigation: NavigationProp<StackParamList, 'HomeScreen'>
+}
 const HomeScreen = ({navigation}:HomeProps) => {
     // state nom et prénom sélectionner dans la liste
     const [ name , setName] = React.useState('')
@@ -39,13 +30,15 @@ const HomeScreen = ({navigation}:HomeProps) => {
     const [modalVisible, setWarningModalVisible] = useState(false);
     const [newUserModalVisible, setNewUserModalVisible] = useState(false);
     const [ deleteUser, setDeleteUser] = useState(false);
-    const [userTab , setUserTab] = useState([]);
+    const [userTab , setUserTab] = useState([] as userData[]);
     const [isReload, setIsReload] = useState(false);
 
     function  initUser() {
         const json = JsonFS.getInstance();
-        JsonFS.waitForLoad().then(() => setUserTab(json.config.utilisateurs))
-        console.log('initiTab2: ', json.config.utilisateurs);
+        JsonFS.waitForLoad().then(() => {
+            setUserTab(json.config.utilisateurs)
+            console.log('initiTab2: ', json.config.utilisateurs);
+        })
     }
     initUser();
 
@@ -87,7 +80,6 @@ const HomeScreen = ({navigation}:HomeProps) => {
                             label={item.prenom + ' ' + item.nom}
                             selected={ name === item.prenom && surname === item.nom}
                             onSelect={() => {setName (item.prenom), setSurname (item.nom)}}
-                            deleteUser={}
                         />
                     )}
                     keyExtractor={(item) => item.prenom + item.nom}
@@ -125,7 +117,6 @@ export const homeStyles = StyleSheet.create({
     },
     column :{
         flexDirection: 'column',
-        width : 'fit-content',
 
     },
     row : {
@@ -190,7 +181,6 @@ export const homeStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 'fit-content',
     },
     radioButtonText: {
         fontSize: RFPercentage (2),
@@ -237,7 +227,6 @@ export const homeStyles = StyleSheet.create({
         backgroundColor : '#be2c54',
         marginTop: RFPercentage (2),
         marginHorizontal: RFPercentage(2),
-        width : 'fit-content'
     },
     closeIcon :
         {
