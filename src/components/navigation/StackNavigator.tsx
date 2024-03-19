@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { dataTypes } from "../../types/dataTypes";
+import { userData } from "../../types/dataTypes";
 import HomeScreen from "../../screens/HomeScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Activity from "../../screens/activity";
 import {StyleSheet} from "react-native";
+import {RFPercentage} from "react-native-responsive-fontsize";
 
 // Définissez le type des paramètres de la pile
 export type StackParamList = {
     HomeScreen: undefined;
-    ActivityScreen: {user : dataTypes};
+    ActivityScreen: {user : userData};
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
         paddingTop:"3%",
         margin:'2.5%',
         color: 'white',
-        fontSize: 30,
+        fontSize: RFPercentage (4),
     },
 });
 export default StackNavigator;

@@ -1,8 +1,8 @@
 import React from "react";
 import {homeStyles} from "../screens/HomeScreen";
-import {Alert, Modal, Pressable, View, Text, TextInput} from "react-native";
+import {Alert, Modal, Pressable, View, Text, TextInput, TouchableOpacity} from "react-native";
 import {RFPercentage} from "react-native-responsive-fontsize";
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 interface WarningModalProps {
     modalVisible : boolean,
     setWarningModalVisible : (boolean) => void,
@@ -40,9 +40,10 @@ export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisi
 interface infoInputProps {
     onChangeName : (text : String) => void,
     onChangeSurname : (text : String) => void,
-
+    newSurname : String,
+    newName : String,
 }
- const InfoInput = ({ onChangeName, onChangeSurname }: infoInputProps)=> {
+ const InfoInput = ({ onChangeName, onChangeSurname, newSurname , newName }: infoInputProps)=> {
 
     return (
         <View style={homeStyles.row}>
@@ -51,8 +52,8 @@ interface infoInputProps {
                 <Text style={homeStyles.label}> {"Prénom"}</Text>
             </View>
             <View style = {homeStyles.column}>
-                <TextInput placeholder ={"Nom"} style={homeStyles.textInput} onChangeText = {onChangeSurname}></TextInput>
-                <TextInput placeholder ={"Prénom"} style={homeStyles.textInput} onChangeText = {onChangeName}></TextInput>
+                <TextInput placeholder ={"Nom"} style={homeStyles.textInput} onChangeText = {onChangeSurname} value ={newSurname}></TextInput>
+                <TextInput placeholder ={"Prénom"} style={homeStyles.textInput} onChangeText = {onChangeName} value = {newName}></TextInput>
             </View>
         </View>
     );
@@ -63,8 +64,10 @@ interface newUserModalProps {
     setModalVisible : (boolean) => void,
     onChangeName : (String) => void,
     onChangeSurname : (String) => void,
+    newName : String,
+    newSurname : String,
 }
-export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, modalVisible, onChangeSurname, onChangeName } ) => {
+export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, modalVisible, onChangeSurname, onChangeName, newSurname, newName } ) => {
 
     return (
         <Modal
@@ -75,10 +78,16 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
                 Alert.alert('Modal has been closed.');
                 setModalVisible(!modalVisible);
             }}>
+
             <View style={homeStyles.modalCenterView}>
+
                 <View style={homeStyles.homeModalView}>
-                    <Text style ={homeStyles.infoLabel}> Veuillez renseignez votre nom et prénom </Text>
-                <InfoInput onChangeName ={onChangeName} onChangeSurname ={onChangeSurname}/>
+                    <TouchableOpacity  style = {homeStyles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
+                    <Icon name = "close" style = {homeStyles.closeIcon}></Icon>
+                    </TouchableOpacity >
+                    <Text style ={homeStyles.mediumTitle}>Création d'un utilisateur ✍️</Text>
+                    <Text style ={homeStyles.infoLabel}>Veuillez renseignez votre nom et prénom</Text>
+                <InfoInput onChangeName ={onChangeName} onChangeSurname ={onChangeSurname} newName={newName} newSurname={newSurname}/>
                     <Pressable
                         style={[homeStyles.modalButton]}
                         onPress={() => setModalVisible(!modalVisible)}>
