@@ -2,7 +2,7 @@ import React from "react";
 import {Alert, Image, ImageSourcePropType, Modal, Pressable, Text, TouchableOpacity, View} from "react-native";
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {styles} from "../styles/activityStyles.ts";
-import {genericData} from "../types/userData.tsx";
+import {genericData} from "../types/dataTypes.tsx";
 import {RFPercentage} from "react-native-responsive-fontsize";
 
 const renderItem = (

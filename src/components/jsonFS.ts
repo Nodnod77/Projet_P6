@@ -1,5 +1,5 @@
 import * as RNFS from "react-native-fs";
-import {configT, outputT} from "../types/userData.tsx";
+import {configT, outputT} from "../types/dataTypes.tsx";
 import {Platform} from "react-native";
 
 

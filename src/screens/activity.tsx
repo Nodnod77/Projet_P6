@@ -12,7 +12,7 @@ import {
     VSpace
 } from "../components/activity_cmp.tsx";
 import {styles} from "../styles/activityStyles.ts";
-import {outputT, userData} from "../types/userData.tsx";
+import {outputT, dataTypes} from "../types/dataTypes.tsx";
 import {StackParamList} from "../components/navigation/StackNavigator.tsx";
 import { RouteProp } from '@react-navigation/native';
 import JsonFS from "../components/jsonFS.ts";
@@ -26,7 +26,7 @@ interface ActivityProps {
 function Activity({ route }: ActivityProps): React.ReactElement{
     const [started, setStarted] = useState(false)
     const [startTime, setStartTime] = useState(0)
-    const { name, surname }: userData = route.params.user;
+    const { name, surname }: dataTypes = route.params.user;
 
     // Data for json output
     const [lieu, setLieu] = useState("")
