@@ -28,8 +28,8 @@ interface HomeProps  {
 
 
 
-
 const HomeScreen = ({navigation}:HomeProps) => {
+
     // state nom et prénom sélectionner dans la liste
     const [ name , setName] = React.useState('')
     const [ surname , setSurname] = React.useState('')
@@ -41,11 +41,12 @@ const HomeScreen = ({navigation}:HomeProps) => {
     const [ deleteUser, setDeleteUser] = useState(false);
     const [userTab , setUserTab] = useState([]);
     const [isReload, setIsReload] = useState(false);
-
+    const [ isDeleteConfirm , setIsDeleteConfirm] = useState(false);
+    const [ userToDelete, setUserToDelete] = useState<userData[]>([]);
     function  initUser() {
         const json = JsonFS.getInstance();
         JsonFS.waitForLoad().then(() => setUserTab(json.config.utilisateurs))
-        console.log('initiTab2: ', json.config.utilisateurs);
+        console.log('initiTab2: ', json.config.utilisateurs +"   deleteUser:" , deleteUser);
     }
     initUser();
 
@@ -56,7 +57,6 @@ const HomeScreen = ({navigation}:HomeProps) => {
         setNewName("");
         setNewSurname("");
     }
-
     const handleStartActivity = () => {
         if ( name == '' || surname ==''){
             setWarningModalVisible(true);
@@ -69,11 +69,27 @@ const HomeScreen = ({navigation}:HomeProps) => {
         };
         navigation.navigate("ActivityScreen", {user: userData});
     };
+
+    const handleConfirmDelete = ()=>{
+
+    }
     return (
         <SafeAreaView style = {homeStyles.screen}>
+                <View style={{display: deleteUser ? 'none' : 'content'}}>
+                <CrudButton setState={setNewUserModalVisible} iconName={"plus"} textButton={'Créer un utilisateur'} state={newUserModalVisible} buttonStyle={homeStyles.newUserButton} textStyle={homeStyles.newUserTextStyle} iconStyle={homeStyles.newUserIcon}/>
+                </View>
+                <View style={{display: deleteUser ?  'none':'content' }} >
+                    <CrudButton setState={setDeleteUser} state={deleteUser} iconName={"trash"} textButton={'Supprimer \n'+'un utilisateur'} buttonStyle={homeStyles.deleteUserButton} textStyle={homeStyles.deleteTextButton} iconStyle={homeStyles.deleteUserIcon}/>
+                </View>
 
-            <CrudButton setModalVisible={setNewUserModalVisible} iconName={"plus"} textButton={'Créer un utilisateur'}/>
-            <CrudButton setModalVisible={setDeleteUser} iconName={"delete"} textButton={'Supprimer un utilisateur'}/>
+                <View style={{display: deleteUser ? 'content' : 'none'}}>
+                <CrudButton setState={setIsDeleteConfirm} iconName={"check"} textButton={'Confirmer la suppression'} state={newUserModalVisible} buttonStyle={homeStyles.newUserButton} textStyle={homeStyles.newUserTextStyle} iconStyle={homeStyles.newUserIcon}/>
+                </View>
+                <View style={{display: deleteUser ? 'content' : 'none'}} >
+                    <CrudButton setState={setDeleteUser} state={deleteUser} iconName={"remove"} textButton={'Annulé la suppression'} buttonStyle={homeStyles.deleteUserButton} textStyle={homeStyles.deleteTextButton} iconStyle={homeStyles.deleteUserIcon}/>
+                </View>
+
+
 
             <NewUserModal modalVisible={newUserModalVisible} onChangeSurname={setNewSurname} onChangeName={setNewName} setModalVisible={setNewUserModalVisible} newSurname={newSurname} newName={newName} setIsReload={setIsReload}   />
             <Text style = {homeStyles.title}>Bienvenue ! 🎈</Text>
@@ -83,18 +99,24 @@ const HomeScreen = ({navigation}:HomeProps) => {
                 <FlatList
                     data={userTab}
                     renderItem={({ item }) => (
+                        (deleteUser? <CustomRadioButton
+                                label={item.prenom + ' ' + item.nom}
+                                selected={userToDelete.includes(item) }
+                                onSelect={() => userToDelete.push({prenom: item.prenom, nom: item.nom})}
+                                deleteUser={deleteUser}
+                            />:
                         <CustomRadioButton
                             label={item.prenom + ' ' + item.nom}
                             selected={ name === item.prenom && surname === item.nom}
                             onSelect={() => {setName (item.prenom), setSurname (item.nom)}}
-                            deleteUser={}
-                        />
+                            deleteUser={deleteUser}
+                        />)
                     )}
                     keyExtractor={(item) => item.prenom + item.nom}
                 />
             </View>
             <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible} warningLabel={"Veuillez sélectionner un utilisateur❗"}/>
-            <TouchableOpacity onPress={()=>handleStartActivity()} style={homeStyles.button}>
+            <TouchableOpacity onPress={ deleteUser ? ()=> {} : ()=>handleStartActivity()} style={homeStyles.button}>
                 <Text style={homeStyles.buttonText}> 🚀 Démarrer une activité</Text>
             </TouchableOpacity>
         </SafeAreaView>
@@ -110,14 +132,15 @@ export const homeStyles = StyleSheet.create({
         fontSize : RFPercentage(6),
         color: 'black',
         fontWeight: 'bold',
-        margin : '5%',
-        marginBottom : '4%'
+        marginVertical : '3%',
+        marginHorizontal : '5%'
+
     },
     list :{
         //justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgba(45,155,240,0.52)',
-        height: '43%',
+        height: '37%',
         width: '60%',
         paddingVertical: RFPercentage(2),
         padding: RFPercentage (3),
@@ -160,6 +183,7 @@ export const homeStyles = StyleSheet.create({
     },
     text :{
         fontSize : RFPercentage(2.3),
+        marginTop : '1%',
         margin : '5%',
         color : '#797272',
     },
@@ -170,8 +194,6 @@ export const homeStyles = StyleSheet.create({
         padding: RFPercentage(2),
         borderRadius: 10,
         alignSelf: 'center',
-
-
     },
     buttonText :{
         color : "white",
@@ -186,7 +208,7 @@ export const homeStyles = StyleSheet.create({
         borderRadius: 8,
         marginVertical: 8,
         borderWidth: 1,
-        borderColor: '#2D9BF0',
+
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -232,15 +254,36 @@ export const homeStyles = StyleSheet.create({
     },
     newUserButton :{
         borderRadius: RFPercentage (2.5),
-        padding: RFPercentage(2),
+        padding: RFPercentage(2.4),
         elevation: RFPercentage(0.5),
         backgroundColor : '#be2c54',
         marginTop: RFPercentage (2),
         marginHorizontal: RFPercentage(2),
         width : 'fit-content'
     },
-    closeIcon :
-        {
+    deleteUserButton:{
+        borderRadius: RFPercentage (1),
+        padding: RFPercentage(1),
+        //elevation: RFPercentage(2),
+        backgroundColor : 'rgba(252,0,0,0.72)',
+        marginTop: RFPercentage (1),
+        marginHorizontal: RFPercentage(3),
+        width : 'fit-content',
+    },
+    deleteTextButton :{
+        fontSize :RFPercentage(1.3),
+        color : 'white',
+        paddingLeft:RFPercentage(0.5),
+    },
+    cancelTextButton :{
+        fontSize :RFPercentage(1),
+        fontWeight: 'bold',
+    },
+    newUserIcon :{
+        color: 'white', fontSize: RFPercentage(2.5), paddingHorizontal: RFPercentage(1)
+    },
+    deleteUserIcon :{color: 'white', fontSize: RFPercentage(1.9), paddingRight: RFPercentage(0.5) , paddingLeft: RFPercentage(0.2)},
+    closeIcon : {
             fontSize : RFPercentage (4),
         },
     buttonClose :

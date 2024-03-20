@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {homeStyles} from "../screens/HomeScreen";
-import {Alert, Modal, Pressable, View, Text, TextInput, TouchableOpacity} from "react-native";
+import {Alert, Modal, Pressable, View, Text, TextInput, TouchableOpacity, ViewStyle, StyleProp} from "react-native";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import Icon from 'react-native-vector-icons/FontAwesome';
 interface WarningModalProps {
@@ -14,17 +14,21 @@ import {NativeStackScreenProps} from "@react-navigation/native-stack";
 
 
 interface CustomRadioButtonProps {
-    label : String,
+    label : string,
     selected : boolean,
     onSelect : ()=> void,
     deleteUser : boolean,
 }
 export const CustomRadioButton = ({ label , selected, onSelect, deleteUser} : CustomRadioButtonProps) => (
     <TouchableOpacity
-        style={[homeStyles.radioButton,
-            { backgroundColor: (!deleteUser && selected ) ? '#007BFF' : '#FFF' },
-            { backgroundColor: (deleteUser && selected )? 'rgba(255,0,0,0.6)' : '#FFF' }
+        style={[
+            homeStyles.radioButton,
+            {
+                backgroundColor: deleteUser && selected ? 'rgba(252,0,0,0.72)' : (!deleteUser && selected ? '#007BFF' : '#FFF'),
+                borderColor: deleteUser && selected ? 'rgba(252,0,0,0.72)' : (!deleteUser && selected ? '#007BFF' : '#FFF'),
+            }
         ]}
+
         onPress={onSelect}
     >
         <Text style={[homeStyles.radioButtonText,
@@ -148,17 +152,21 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
     );
 }
     interface crudButtonProps {
-    setModalVisible : (String) => void,
+        setState : (String) => void,
         iconName : String,
         textButton : String,
+        state : boolean,
+        buttonStyle : StyleProp<ViewStyle>,
+        textStyle :StyleProp<ViewStyle>
+        iconStyle : StyleProp<ViewStyle>
     }
-export const CrudButton = ({setModalVisible, iconName,  textButton}: crudButtonProps) => {
+export const CrudButton = ({setState, iconName,  textButton, state, buttonStyle, textStyle, iconStyle}: crudButtonProps) => {
     return (
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <TouchableOpacity onPress={() => setModalVisible(true)} style={homeStyles.newUserButton}>
+            <TouchableOpacity onPress={() => setState(!state)} style={ buttonStyle}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Icon name={iconName} style={{color: 'white', fontSize: RFPercentage(2)}}></Icon>
-                    <Text style={homeStyles.newUserTextStyle}> {textButton} </Text>
+                    <Icon name={iconName} style={iconStyle}></Icon>
+                    <Text style={textStyle}> {textButton} </Text>
                 </View>
             </TouchableOpacity>
         </View>
