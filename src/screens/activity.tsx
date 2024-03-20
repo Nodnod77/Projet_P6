@@ -26,10 +26,9 @@ import {RFPercentage} from "react-native-responsive-fontsize";
 interface ActivityProps {
     route: RouteProp<StackParamList, 'ActivityScreen'>;
 }
-
 function Activity({ route }: ActivityProps): React.ReactElement{
     // Params
-    const { name, surname }: userData = route.params.user;
+    const { prenom, nom }: userData = route.params.user;
 
     // Time
     const [started, setStarted] = useState(false)
@@ -64,7 +63,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
             <View style={{flexDirection: "row"}}>
                 <Image source={require('../styles/assets/id-card.png')} style={{width: 70, height: 70}} />
                 <Text style={[activityStyles.text, {color: "#000"}]}>
-                    {name} {surname}
+                    {prenom} {nom}
                 </Text>
             </View>
             <VSpace margin={6}/>
@@ -126,8 +125,8 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                         onPress={() => {
                             // Save into json
                             let entry: outputT = {
-                                prenom: name,
-                                nom: surname,
+                                prenom: prenom,
+                                nom: nom,
                                 lieu: lieu,
                                 activite: activite,
                                 produits: produits,

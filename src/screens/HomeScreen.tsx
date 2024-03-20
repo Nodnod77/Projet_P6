@@ -1,33 +1,25 @@
 import React, {useState} from 'react';
 import {
-    Pressable,
     SafeAreaView,
     StyleSheet,
-    TextInput,
     View,
     TouchableOpacity,
-    FlatList,
-    ScrollView, Alert, Modal
+    FlatList
 } from 'react-native';
 import {Text} from 'react-native';
 import {StackParamList} from "../components/navigation/StackNavigator";
 
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {userData} from "../types/dataTypes";
 import { RFPercentage } from "react-native-responsive-fontsize";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {CrudButton, CustomRadioButton, NewUserModal, WarningModal} from "../components/homeScreen_cmp";
 import JsonFS from "../components/jsonFS";
+import {NavigationProp} from "@react-navigation/native";
 
 
 
 interface HomeProps  {
-    navigation : NativeStackScreenProps<StackParamList, 'HomeScreen'>,
-};
-
-
-
-
+    navigation: NavigationProp<StackParamList, 'HomeScreen'>
+}
 const HomeScreen = ({navigation}:HomeProps) => {
 
     // state nom et prénom sélectionner dans la liste
@@ -39,7 +31,7 @@ const HomeScreen = ({navigation}:HomeProps) => {
     const [modalVisible, setWarningModalVisible] = useState(false);
     const [newUserModalVisible, setNewUserModalVisible] = useState(false);
     const [ deleteUser, setDeleteUser] = useState(false);
-    const [userTab , setUserTab] = useState([]);
+    const [userTab , setUserTab] = useState([] as userData[]);
     const [isReload, setIsReload] = useState(false);
     const [ isDeleteConfirm , setIsDeleteConfirm] = useState(false);
     const [ userToDelete, setUserToDelete] = useState<userData[]>([]);
@@ -148,7 +140,7 @@ export const homeStyles = StyleSheet.create({
     },
     column :{
         flexDirection: 'column',
-        width : 'fit-content',
+
 
     },
     row : {
@@ -212,7 +204,6 @@ export const homeStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 'fit-content',
     },
     radioButtonText: {
         fontSize: RFPercentage (2),
@@ -259,7 +250,6 @@ export const homeStyles = StyleSheet.create({
         backgroundColor : '#be2c54',
         marginTop: RFPercentage (2),
         marginHorizontal: RFPercentage(2),
-        width : 'fit-content'
     },
     deleteUserButton:{
         borderRadius: RFPercentage (1),
