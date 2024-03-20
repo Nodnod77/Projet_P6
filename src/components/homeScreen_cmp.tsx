@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {homeStyles} from "../screens/HomeScreen";
-import {Pressable, View, Text, TextInput, TouchableOpacity} from "react-native";
+import {Pressable, View, Text, TextInput, TouchableOpacity, StyleProp, ViewStyle} from "react-native";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import Icon from 'react-native-vector-icons/FontAwesome';
 interface WarningModalProps {
@@ -125,9 +125,9 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
     );
 }
     interface crudButtonProps {
-        setState : (String) => void,
-        iconName : String,
-        textButton : String,
+        setState : (arg0: boolean) => void,
+        iconName : string,
+        textButton : string,
         state : boolean,
         buttonStyle : StyleProp<ViewStyle>,
         textStyle :StyleProp<ViewStyle>

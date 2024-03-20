@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {
-    Alert,
+    Alert, Animated,
     Dimensions,
     Image,
-    Pressable,
+    Pressable, ScrollViewBase, ScrollViewComponent,
     Text,
     View
 } from 'react-native';
@@ -21,6 +21,7 @@ import {RouteProp} from '@react-navigation/native';
 import JsonFS from "../components/jsonFS.ts";
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {RFPercentage} from "react-native-responsive-fontsize";
+import ScrollView = Animated.ScrollView;
 
 
 interface ActivityProps {
@@ -33,7 +34,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     // Time
     const [started, setStarted] = useState(false)
     const [startTime, setStartTime] = useState(0)
-    let time = 0
+    const [time, setTime] = useState(0)
 
     // Data for json output
     const [lieu, setLieu] = useState("")
@@ -58,20 +59,27 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     const [modalVisible, setModalVisible] = useState(false)
 
     return (
-        <View style={{paddingHorizontal: 40, width: Dimensions.get('window').width}}>
-            <VSpace margin={24}/>
+        <ScrollView style={{paddingHorizontal: RFPercentage(3.9), width: Dimensions.get('window').width}}>
+
+            {/* ------------------------------------------ Print User ---------------------------------------------- */}
+            <VSpace margin={RFPercentage(2.3)}/>
             <View style={{flexDirection: "row"}}>
-                <Image source={require('../styles/assets/id-card.png')} style={{width: 70, height: 70}} />
+                <Image
+                    source={require('../styles/assets/id-card.png')}
+                    style={activityStyles.image}
+                />
                 <Text style={[activityStyles.text, {color: "#000"}]}>
                     {prenom} {nom}
                 </Text>
             </View>
-            <VSpace margin={6}/>
+            <VSpace margin={RFPercentage(0.5)}/>
             <View>
                 <Text style={activityStyles.text}>Veuillez renseigner les champs suivants :</Text>
             </View>
-            <View style={{marginLeft: 30}}>
-                <VSpace margin={30}/>
+
+            {/* --------------------------------------- Select options --------------------------------------------- */}
+            <View style={{marginLeft: RFPercentage(2.9)}}>
+                <VSpace margin={RFPercentage(2.9)}/>
                 <InputLine icon={require("../styles/assets/location.png")} name={"Lieu"}>
                     <DropList value={lieu} setValue={setLieu} data={lieuData} />
                 </InputLine>
@@ -93,17 +101,20 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                         name={"Mode d'utilisations"}
                         data={utilisationsData} />
                 </InputLine>
-                {started ?
-                    <><VSpace margin={RFPercentage(1)}/>
+
+                {/* ---------------------------- If Started, show stop buttons ------------------------------------- */}
+                <View style={{display: started ? undefined : "none"}}>
+                    <VSpace margin={RFPercentage(1)}/>
                     <View style={{alignItems: "center", margin: RFPercentage(1)}}>
                         <CountdownCircleTimer
+                            size={RFPercentage(11)}
                             isPlaying
                             isGrowing
                             duration={60}
                             colors="#be2c54"
                             onComplete={() => {
                                 // do your stuff here
-                                time += 60
+                                setTime(time + 60)
                                 return { shouldRepeat: true }
                             }}
                         >
@@ -136,10 +147,13 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                             }
                             jsHandle.addEntry(entry)
 
+                            // Reset time
+                            setTime(0)
+
                             // Switch buttons
                             setStarted(false)
                         }}>
-                        <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: 40}]}>
+                        <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: RFPercentage(3.9)}]}>
                             Finir activité en cours
                         </Text>
                     </Pressable>
@@ -147,21 +161,27 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                         style={activityStyles.buttonCancel}
                         onPress={() => {
                             // Popup Alert to confirm
-                            setModalVisible(true)
+                            setModalVisible(true) // If needed, states will be changed in the modal component
                         }}>
-                        <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: 30}]}>
+                        <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: RFPercentage(3.9)}]}>
                             Annuler
                         </Text>
                     </Pressable>
                     <WarningModal modalVisible={modalVisible} setWarningModalVisible={setModalVisible}
-                                  setStarted={setStarted} /></>
-                    :
-                    <><VSpace margin={RFPercentage(6)}/>
+                                  setStarted={setStarted} setTime={setTime} />
+                </View>
+
+                {/* ------------------------- If not started, show starting button ----------------------------------*/}
+                <View style={{display: started ? "none" : undefined}}>
+                    <VSpace margin={RFPercentage(5)}/>
                     <Pressable
                         style={activityStyles.buttonStart}
                         onPress={() => {
                             if(lieu !== "" && activite !== "") {
-                                setStartTime(Date.now) // Time
+                                // Time
+                                setStartTime(Date.now)
+                                setTime(0) // Just to be sure...
+
                                 setStarted(true) // Switch buttons
                             }else{
                                 Alert.alert(
@@ -170,13 +190,13 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                                 )
                             }
                         }}>
-                        <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: 60}]}>
+                        <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: RFPercentage(6)}]}>
                             🏁 Commencer
                         </Text>
-                    </Pressable></>
-                }
+                    </Pressable>
+                </View>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 

@@ -35,35 +35,48 @@ export default class JsonFS {
         let first: boolean = false
         let second: boolean = false
 
+        console.debug("Constructing JsonFS...")
+
         // NOTE: This part need test for iOS
         JsonFS.loadPaths()
 
         // Load config.json
-        RNFS.readFile(configFile)
-            .then((result) => {
-                JsonFS.config = JSON.parse(result).config
-                console.log ("json.config.utilisateurs :  " , JsonFS.config.utilisateurs)
-                first = true
-                if(first && second) JsonFS.isLoaded = true
-            })
-            .catch((err) => {
-                JsonFS.loadingFailure = true
-                console.error("Couldn't load config file, see below")
-                console.error(err.toString())
-            })
-
-        // Load output.json
-        RNFS.readFile(outputFile)
-            .then((result) => {
-                JsonFS.output = JSON.parse(result).output
-                second = true
-                if(first && second) JsonFS.isLoaded = true
-            })
-            .catch((err) => {
-                JsonFS.loadingFailure = true
-                console.error("Couldn't load output file, see below")
-                console.error(err.toString())
-            })
+        RNFS.exists(configFile).then((resConf) => {
+            if(resConf){
+                RNFS.readFile(configFile)
+                    .then((result) => {
+                        JsonFS.config = JSON.parse(result).config
+                        first = true
+                        if (first && second) JsonFS.isLoaded = true
+                    })
+                    .catch((err) => {
+                        JsonFS.loadingFailure = true
+                        console.error("Couldn't load config file, see below")
+                        console.error(err.toString())
+                    })
+                // Load output.json
+                RNFS.exists(outputFile).then((resOutp) => {
+                    if(resOutp){
+                        RNFS.readFile(outputFile)
+                            .then((result) => {
+                                JsonFS.output = JSON.parse(result).output
+                                second = true
+                                if(first && second) JsonFS.isLoaded = true
+                            })
+                            .catch((err) => {
+                                JsonFS.loadingFailure = true
+                                console.error("Couldn't load output file, see below")
+                                console.error(err.toString())
+                            })
+                    }else{
+                        console.error("Output file is missing, but config file is here...")
+                    }
+                })
+            }else{
+                // Queue a macro task to rebuild JsonFS
+                setTimeout(() => JsonFS.instance = new JsonFS(), 0)
+            }
+        })
     }
 
     private write(file: string) {
@@ -103,7 +116,7 @@ export default class JsonFS {
         if(JsonFS.loadingFailure) return
         while(! JsonFS.isLoaded){
             console.log("Files still not loaded...")
-            await new Promise(f => setTimeout(f, 10));
+            await new Promise(f => setTimeout(f, 600));
         }
     }
 

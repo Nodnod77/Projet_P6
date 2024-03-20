@@ -7,11 +7,12 @@ import {RFPercentage} from "react-native-responsive-fontsize";
 import {homeStyles} from "../screens/HomeScreen.tsx";
 import {CommonModal} from "./commonModal.tsx";
 
+
 const renderItem = (
     item: genericData
 ): React.JSX.Element => {
     return (
-        <View style={{marginRight: 5}}>
+        <View style={{marginRight: RFPercentage(0.4)}}>
             <Text style={activityStyles.selectableText}>{item.label}</Text>
         </View>
     );
@@ -22,7 +23,11 @@ const renderSelectedItem = (
 ): React.JSX.Element => (
     <View style={activityStyles.selectedContainer}>
         <Text style={activityStyles.selectableText}>{item.label}</Text>
-        <Image source={require("../styles/assets/cross.png")} style={{width: 15, height: 15, opacity: 0.6}} />
+        <Image source={require("../styles/assets/cross.png")} style={{
+            width: RFPercentage(1.4),
+            height: RFPercentage(1.4),
+            opacity: RFPercentage(0.05)
+        }} />
     </View>
 )
 
@@ -30,36 +35,44 @@ interface VSpaceProps {
     margin?: number
 }
 export const VSpace = (props: VSpaceProps): React.JSX.Element => {
-    return <View style={{marginVertical: props.margin ?? 30}}/>
+    return <View style={{marginVertical: props.margin ?? RFPercentage(2.9)}}/>
 }
 
 interface WarningModalProps {
     modalVisible : boolean,
-    setWarningModalVisible : (a: boolean) => void,
-    setStarted: (a: boolean) => void
+    setWarningModalVisible : (arg0: boolean) => void,
+    setStarted: (arg0: boolean) => void,
+    setTime: (arg0: number) => void
 }
-export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisible, modalVisible, setStarted }) => {
+export const WarningModal : React.FC<WarningModalProps> =
+    ({ setWarningModalVisible, modalVisible, setStarted, setTime }) => {
     return (
         <CommonModal modalVisible={modalVisible} setModalVisible={setWarningModalVisible}>
-            <Text style={{marginBottom: 15, textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>
-                ⚠️ Attention ⚠
+            <Text style={{marginBottom: RFPercentage(1.4), textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>
+                ⚠️ Attention ⚠️
             </Text>
-            <Text style={{marginBottom: 15, textAlign: 'center', color: 'black', fontSize: RFPercentage(2)}}>
+            <Text style={{marginBottom: RFPercentage(1.4), textAlign: 'center', color: 'black', fontSize: RFPercentage(2)}}>
                 Si vous annuler cette session, les données liés à cette dernière ne seront pas enregistrés.
                 Voulez vous vraiment annuler cette session ?
+            </Text>
+            <Text style={{fontSize: RFPercentage(1.4), fontStyle: "italic"}}>
+                Pour enregistrer les données, appuyer sur "Finir activité en cours"
             </Text>
             <View style={{flexDirection: "row"}}>
                 <Pressable
                     style={[homeStyles.modalButton, {marginHorizontal: RFPercentage(3)}]}
                     onPress={() => {
-                        setWarningModalVisible(false)
+                        // If yes : set time to 0, set started to false
+                        setTime(0)
                         setStarted(false)
+                        setWarningModalVisible(false)
                     }}>
                     <Text style={homeStyles.modalTextStyle}>Oui</Text>
                 </Pressable>
                 <Pressable
                     style={[homeStyles.modalButton, {marginHorizontal: RFPercentage(3)}]}
                     onPress={() => {
+                        // If no, hide modal and resume as normal
                         setWarningModalVisible(false)
                     }}>
                     <Text style={homeStyles.modalTextStyle}>Non</Text>
@@ -103,13 +116,19 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
                 <Pressable
                     style={[activityStyles.buttonClose, {alignSelf: "flex-start"}]}
                     onPress={() => setModalVisible(!modalVisible)}>
-                    <Image source={require("../styles/assets/cross.png")} style={{width: 30, height: 30}} />
+                    <Image source={require("../styles/assets/cross.png")}
+                           style={{width: RFPercentage(2.9), height: RFPercentage(2.9)}} />
                 </Pressable>
             </CommonModal>
             <Pressable
                 style={activityStyles.buttonOpen}
                 onPress={() => setModalVisible(true)}>
-                <Text style={[activityStyles.text, {color: "white", fontWeight: "bold", fontSize: 24, textAlign: "center"}]}>
+                <Text style={
+                    [
+                        activityStyles.text,
+                        {color: "white", fontWeight: "bold", fontSize: RFPercentage(2.3), textAlign: "center"}
+                    ]
+                }>
                     Sélectionner {props.name.toLowerCase()}
                 </Text>
             </Pressable>
@@ -154,8 +173,8 @@ interface InputLineProps {
 export const InputLine = (props: InputLineProps): React.JSX.Element => {
     return (
         <View style={{flexDirection: "row"}}>
-            <Image source={props.icon} style={{width: 70, height: 70}} />
-            <Text style={[activityStyles.text, {color: "#000"}, {width: 180}]}>{props.name}</Text>
+            <Image source={props.icon} style={activityStyles.image} />
+            <Text style={[activityStyles.text, {color: "#000", width: RFPercentage(18)}]}>{props.name}</Text>
             {props.children}
         </View>
     )

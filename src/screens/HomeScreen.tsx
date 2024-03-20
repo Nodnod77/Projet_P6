@@ -67,17 +67,17 @@ const HomeScreen = ({navigation}:HomeProps) => {
     }
     return (
         <SafeAreaView style = {homeStyles.screen}>
-                <View style={{display: deleteUser ? 'none' : 'content'}}>
+                <View style={{display: deleteUser ? 'none' : undefined}}>
                 <CrudButton setState={setNewUserModalVisible} iconName={"plus"} textButton={'Créer un utilisateur'} state={newUserModalVisible} buttonStyle={homeStyles.newUserButton} textStyle={homeStyles.newUserTextStyle} iconStyle={homeStyles.newUserIcon}/>
                 </View>
-                <View style={{display: deleteUser ?  'none':'content' }} >
+                <View style={{display: deleteUser ?  'none':undefined }} >
                     <CrudButton setState={setDeleteUser} state={deleteUser} iconName={"trash"} textButton={'Supprimer \n'+'un utilisateur'} buttonStyle={homeStyles.deleteUserButton} textStyle={homeStyles.deleteTextButton} iconStyle={homeStyles.deleteUserIcon}/>
                 </View>
 
-                <View style={{display: deleteUser ? 'content' : 'none'}}>
+                <View style={{display: deleteUser ? undefined : 'none'}}>
                 <CrudButton setState={setIsDeleteConfirm} iconName={"check"} textButton={'Confirmer la suppression'} state={newUserModalVisible} buttonStyle={homeStyles.newUserButton} textStyle={homeStyles.newUserTextStyle} iconStyle={homeStyles.newUserIcon}/>
                 </View>
-                <View style={{display: deleteUser ? 'content' : 'none'}} >
+                <View style={{display: deleteUser ? undefined : 'none'}} >
                     <CrudButton setState={setDeleteUser} state={deleteUser} iconName={"remove"} textButton={'Annulé la suppression'} buttonStyle={homeStyles.deleteUserButton} textStyle={homeStyles.deleteTextButton} iconStyle={homeStyles.deleteUserIcon}/>
                 </View>
 
@@ -258,7 +258,6 @@ export const homeStyles = StyleSheet.create({
         backgroundColor : 'rgba(252,0,0,0.72)',
         marginTop: RFPercentage (1),
         marginHorizontal: RFPercentage(3),
-        width : 'fit-content',
     },
     deleteTextButton :{
         fontSize :RFPercentage(1.3),

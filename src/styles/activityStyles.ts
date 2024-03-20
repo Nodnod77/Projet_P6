@@ -1,17 +1,23 @@
 import {StyleSheet} from "react-native";
 import {RFPercentage} from "react-native-responsive-fontsize";
 
+
 export const activityStyles = StyleSheet.create({
+    image: {
+        width: RFPercentage(7),
+        height: RFPercentage(7),
+        marginRight: RFPercentage(1)
+    },
     text: {
         fontSize: RFPercentage(2.4),
         textAlignVertical: "center",
-        marginHorizontal: 10
+        marginHorizontal: RFPercentage(0.9)
     },
     selectableText: {
         color: "#000",
         fontSize: RFPercentage(1.6),
         textAlignVertical: "center",
-        marginHorizontal: 5
+        marginHorizontal: RFPercentage(0.5)
     },
     itemContainer: {
         padding: RFPercentage(0.6),
@@ -22,14 +28,14 @@ export const activityStyles = StyleSheet.create({
         flexDirection: 'row',
         // justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 14,
-        borderWidth: 1,
+        borderRadius: RFPercentage(1.3),
+        borderWidth: 0.1,
         borderColor: 'rgba(0,0,0,0.3)',
         backgroundColor: 'white',
-        marginVertical: 3,
-        marginHorizontal: 6,
-        paddingHorizontal: 12,
-        paddingVertical: 8,
+        marginVertical: RFPercentage(0.2),
+        marginHorizontal: RFPercentage(0.5),
+        paddingHorizontal: RFPercentage(1),
+        paddingVertical: RFPercentage(0.7),
         elevation: 1,
     },
     dropdown: {
@@ -39,8 +45,8 @@ export const activityStyles = StyleSheet.create({
         alignSelf: "flex-start",
         borderColor: 'gray',
         borderWidth: 0.5,
-        borderRadius: 8,
-        paddingHorizontal: 8,
+        borderRadius: RFPercentage(0.8),
+        paddingHorizontal: RFPercentage(0.7),
     },
     itemTextStyle: {
         fontSize: RFPercentage(1.6),
@@ -51,7 +57,7 @@ export const activityStyles = StyleSheet.create({
         borderRadius: RFPercentage(1.5),
         paddingHorizontal: RFPercentage(1),
         paddingVertical: RFPercentage(1.2),
-        elevation: 2
+        elevation: 4
     },
     buttonClose: {
         borderRadius: 100,
@@ -68,26 +74,26 @@ export const activityStyles = StyleSheet.create({
         elevation: 8
     },
     buttonEnd: {
-        height: 100,
-        width: 450,
+        height: RFPercentage(10),
+        width: RFPercentage(45),
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#F27726",
-        marginBottom: 20,
-        borderRadius: 20,
-        padding: 10,
+        marginBottom: RFPercentage(1.9),
+        borderRadius: RFPercentage(1.9),
+        padding: RFPercentage(0.9),
         elevation: 5
     },
     buttonCancel: {
-        height: 70,
-        width: 150,
+        height: RFPercentage(6.9),
+        width: RFPercentage(15),
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#F24726",
-        borderRadius: 20,
-        padding: 10,
+        borderRadius: RFPercentage(1.9),
+        padding: RFPercentage(0.9),
         elevation: 4
     },
 })
