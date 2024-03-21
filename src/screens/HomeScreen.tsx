@@ -30,7 +30,7 @@ const HomeScreen = ({navigation}:HomeProps) => {
     const [ newSurname , setNewSurname] = React.useState('')
     const [modalVisible, setWarningModalVisible] = useState(false);
     const [newUserModalVisible, setNewUserModalVisible] = useState(false);
-    const [ deleteUser, setDeleteUser] = useState(false);
+    const [ deleteUser, setDeleteUser] = useState(false); //click
     const [userTab , setUserTab] = useState([] as userData[]);
     const [isReload, setIsReload] = useState(false);
     const [ isDeleteConfirm , setIsDeleteConfirm] = useState(false);
@@ -41,13 +41,17 @@ const HomeScreen = ({navigation}:HomeProps) => {
         console.log('initiTab2: ', json.config.utilisateurs +"   deleteUser:" , deleteUser);
     }
     initUser();
-
+    console.log ('reload :', isReload);
     if (isReload){
         console.log('reload !')
         initUser ();
-        setIsReload(false);
+
         setNewName("");
         setNewSurname("");
+        setIsDeleteConfirm(false)
+        setUserToDelete([]);
+        setDeleteUser(false)
+        setIsReload(false);
     }
     const handleStartActivity = () => {
         if ( name == '' || surname ==''){
@@ -62,7 +66,25 @@ const HomeScreen = ({navigation}:HomeProps) => {
         navigation.navigate("ActivityScreen", {user: userData});
     };
 
-    const handleConfirmDelete = ()=>{
+    if (isDeleteConfirm){
+            const json = JsonFS.getInstance();
+            // // TODO: faire un modal su userToDel est vide
+        console.log ("supprimer :"+ userToDelete)
+        //json.deleteUser(userToDelete[1].prenom, userToDelete[1].nom);
+        userToDelete.forEach((userToDel) =>json.deleteUser(userToDel.prenom, userToDel.nom).then(()=>setIsReload(true)));
+
+    }
+
+    const handleUserToDeleteSelection = (prenomToDel: string, nomToDel: string )=>{
+        if (userToDelete.some(user => user.prenom === prenomToDel && user.nom === nomToDel)){
+            // enlever prenomToDel et nomToDel de userToDelete
+            const updatedUsers = userToDelete.filter(user => !(user.prenom === prenomToDel && user.nom === nomToDel));
+            setUserToDelete(updatedUsers);
+            console.log("userToDelete : ",userToDelete);
+            return;
+        }
+        setUserToDelete([...userToDelete, {prenom:prenomToDel, nom : nomToDel}]);
+        console.log("userToDelete : ",userToDelete);
 
     }
     return (
@@ -78,7 +100,7 @@ const HomeScreen = ({navigation}:HomeProps) => {
                 <CrudButton setState={setIsDeleteConfirm} iconName={"check"} textButton={'Confirmer la suppression'} state={newUserModalVisible} buttonStyle={homeStyles.newUserButton} textStyle={homeStyles.newUserTextStyle} iconStyle={homeStyles.newUserIcon}/>
                 </View>
                 <View style={{display: deleteUser ? undefined : 'none'}} >
-                    <CrudButton setState={setDeleteUser} state={deleteUser} iconName={"remove"} textButton={'Annulé la suppression'} buttonStyle={homeStyles.deleteUserButton} textStyle={homeStyles.deleteTextButton} iconStyle={homeStyles.deleteUserIcon}/>
+                    <CrudButton setState={setIsReload} state={isReload} iconName={"remove"} textButton={'Annulé la suppression'} buttonStyle={homeStyles.deleteUserButton} textStyle={homeStyles.deleteTextButton} iconStyle={homeStyles.deleteUserIcon}/>
                 </View>
 
 
@@ -93,8 +115,8 @@ const HomeScreen = ({navigation}:HomeProps) => {
                     renderItem={({ item }) => (
                         (deleteUser? <CustomRadioButton
                                 label={item.prenom + ' ' + item.nom}
-                                selected={userToDelete.includes(item) }
-                                onSelect={() => userToDelete.push({prenom: item.prenom, nom: item.nom})}
+                                selected={userToDelete.some(user => user.prenom === item.prenom && user.nom === item.nom)}
+                                onSelect={()=>handleUserToDeleteSelection(item.prenom, item.nom)}
                                 deleteUser={deleteUser}
                             />:
                         <CustomRadioButton
@@ -108,9 +130,11 @@ const HomeScreen = ({navigation}:HomeProps) => {
                 />
             </View>
             <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible} warningLabel={"Veuillez sélectionner un utilisateur❗"}/>
-            <TouchableOpacity onPress={ deleteUser ? ()=> {} : ()=>handleStartActivity()} style={homeStyles.button}>
-                <Text style={homeStyles.buttonText}> 🚀 Démarrer une activité</Text>
-            </TouchableOpacity>
+            <TouchableOpacity  onPress={ deleteUser ? ()=> {} : ()=>handleStartActivity()} style={deleteUser? [homeStyles.button,homeStyles.greyButtonColor]: [homeStyles.button,homeStyles.blueButtonColor]}>
+            <Text style={homeStyles.buttonText}> 🚀 Démarrer une activité</Text>
+        </TouchableOpacity>
+
+
         </SafeAreaView>
 
     );
@@ -182,10 +206,17 @@ export const homeStyles = StyleSheet.create({
 
     button: {
         marginTop: RFPercentage(5),
-        backgroundColor: '#2D9BF0',
+
         padding: RFPercentage(2),
         borderRadius: 10,
         alignSelf: 'center',
+    },
+    greyButtonColor :{
+        backgroundColor: 'rgba(192,192,192,0.31)',
+    },
+
+    blueButtonColor :{
+        backgroundColor: '#2D9BF0',
     },
     buttonText :{
         color : "white",

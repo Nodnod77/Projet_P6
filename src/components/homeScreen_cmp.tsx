@@ -39,6 +39,7 @@ export const CustomRadioButton = ({ label , selected, onSelect, deleteUser} : Cu
 
 
 
+
 export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisible, modalVisible,warningLabel }) => {
 
     return (
@@ -100,7 +101,7 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
         json.addUser(newName, newSurname).then(() => {
             setModalVisible(false);
             setIsReload(true);
-        }); // + faire un .then et set la liste des user
+        });
     }
 
     return (
