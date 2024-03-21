@@ -38,7 +38,6 @@ const HomeScreen = ({navigation}:HomeProps) => {
     function  initUser() {
         const json = JsonFS.getInstance();
         JsonFS.waitForLoad().then(() => setUserTab(json.config.utilisateurs))
-        console.log('initiTab2: ', json.config.utilisateurs +"   deleteUser:" , deleteUser);
     }
     initUser();
     console.log ('reload :', isReload);

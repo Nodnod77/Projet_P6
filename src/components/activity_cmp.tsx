@@ -35,17 +35,18 @@ interface VSpaceProps {
     margin?: number
 }
 export const VSpace = (props: VSpaceProps): React.JSX.Element => {
-    return <View style={{marginVertical: props.margin ?? RFPercentage(2.9)}}/>
+    return <View style={{marginVertical: props.margin ?? RFPercentage(2)}}/>
 }
 
 interface WarningModalProps {
     modalVisible : boolean,
     setWarningModalVisible : (arg0: boolean) => void,
     setStarted: (arg0: boolean) => void,
-    setTime: (arg0: number) => void
+    setTime: (arg0: number) => void,
+    clockReset: (arg0: (prevKey: number) => number) => void
 }
 export const WarningModal : React.FC<WarningModalProps> =
-    ({ setWarningModalVisible, modalVisible, setStarted, setTime }) => {
+    ({ setWarningModalVisible, modalVisible, setStarted, setTime, clockReset }) => {
     return (
         <CommonModal modalVisible={modalVisible} setModalVisible={setWarningModalVisible}>
             <Text style={{marginBottom: RFPercentage(1.4), textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>
@@ -64,6 +65,7 @@ export const WarningModal : React.FC<WarningModalProps> =
                     onPress={() => {
                         // If yes : set time to 0, set started to false
                         setTime(0)
+                        clockReset((prevKey: number) => prevKey + 1)
                         setStarted(false)
                         setWarningModalVisible(false)
                     }}>

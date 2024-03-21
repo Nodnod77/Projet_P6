@@ -25,7 +25,7 @@ function App(): React.JSX.Element {
         console.debug("First time launching app, init...")
         initApp()
       }else if(!conf || !outp){
-        throw new Error("One of the two files is missing !")
+        throw new Error("One of the two files is missing ! App should be reinstalled")
       }
     })
   })

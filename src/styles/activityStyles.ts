@@ -4,8 +4,8 @@ import {RFPercentage} from "react-native-responsive-fontsize";
 
 export const activityStyles = StyleSheet.create({
     image: {
-        width: RFPercentage(7),
-        height: RFPercentage(7),
+        width: RFPercentage(6),
+        height: RFPercentage(6),
         marginRight: RFPercentage(1)
     },
     text: {
@@ -74,7 +74,7 @@ export const activityStyles = StyleSheet.create({
         elevation: 8
     },
     buttonEnd: {
-        height: RFPercentage(10),
+        height: RFPercentage(9),
         width: RFPercentage(45),
         alignSelf: "center",
         alignItems: "center",
@@ -86,8 +86,8 @@ export const activityStyles = StyleSheet.create({
         elevation: 5
     },
     buttonCancel: {
-        height: RFPercentage(6.9),
-        width: RFPercentage(15),
+        height: RFPercentage(6.5),
+        width: RFPercentage(18),
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
