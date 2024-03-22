@@ -40,9 +40,7 @@ const HomeScreen = ({navigation}:HomeProps) => {
         JsonFS.waitForLoad().then(() => setUserTab(json.config.utilisateurs))
     }
     initUser();
-    console.log ('reload :', isReload);
     if (isReload){
-        console.log('reload !')
         initUser ();
 
         setNewName("");

@@ -139,15 +139,24 @@ export default class JsonFS {
     public async deleteUser(
         name: string,
         surname: string
-    ){
+    ): Promise<boolean>{
         // Wait for loading to finish and check failure
         await JsonFS.waitForLoad()
 
-        JsonFS.config.utilisateurs.splice(
-            JsonFS.config.utilisateurs.indexOf({prenom: name, nom: surname}),
-            1
+        let index = JsonFS.config.utilisateurs.findIndex(
+            (obj) =>  obj.nom === surname && obj.prenom === name
         )
+        if(index !== -1){
+            JsonFS.config.utilisateurs.splice(
+                index,
+                1
+            )
+        }else{ // User not found
+            return false
+        }
+
         this.write("config");
+        return true
     }
 
     public async addEntry(
