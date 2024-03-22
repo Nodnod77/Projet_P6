@@ -43,7 +43,9 @@ export const CustomRadioButton = ({ label , selected, onSelect, deleteUser} : Cu
 export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisible, modalVisible,warningLabel }) => {
 
     return (
-        <CommonModal modalVisible={modalVisible} setModalVisible={setWarningModalVisible} modalViewStyle={{width: RFPercentage(40)}}>
+        <CommonModal modalVisible={modalVisible} setModalVisible={setWarningModalVisible} modalViewStyle={{width: RFPercentage(43), padding : RFPercentage(4)}}>
+
+            <Icon name="warning" style={{color: '#be2c54', fontSize: RFPercentage(4)}}></Icon>
             <Text style={{marginBottom: 15, textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>{warningLabel}</Text>
             <Pressable
                 style={[homeStyles.modalButton]}
@@ -90,14 +92,18 @@ interface newUserModalProps {
 export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, modalVisible, onChangeSurname, onChangeName, newSurname, newName,setIsReload } ) => {
     //state de la modal input name et surname
     const [newUserWarningModalVisible, setNewUserWarningModalVisible] = useState(false);
+    const [warningUserExist, setWarningUserExist] = useState(false);
 
     function handleCreateUser() {
-        if (newSurname === '' || newSurname === ' ' && newName === '' || newName === ' ') {
+        if ( newName == '' || newName == ' ' || newSurname === '' || newSurname === ' ' ) {
             setNewUserWarningModalVisible(true);
             return;
         }
         const json = JsonFS.getInstance();
-        // // TODO: Vérifier si le user existe déjà
+        if (json.config.utilisateurs.some(user => user.prenom === newName && user.nom === newSurname)){
+            setWarningUserExist(true);
+            return;
+        }
         json.addUser(newName, newSurname).then(() => {
             setModalVisible(false);
             setIsReload(true);
@@ -108,7 +114,10 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
         <CommonModal modalVisible={modalVisible} setModalVisible={setModalVisible} >
             <WarningModal modalVisible={newUserWarningModalVisible}
                           setWarningModalVisible={setNewUserWarningModalVisible}
-                          warningLabel={"⚠️ Veuillez indiquer votre nom et prénom ❗"}/>
+                          warningLabel={"Veuillez indiquer votre nom et prénom ❗"}/>
+            <WarningModal modalVisible={warningUserExist}
+                          setWarningModalVisible={setWarningUserExist}
+                          warningLabel={"Cet utilisateur existe déjà ❗"}/>
             <TouchableOpacity style={homeStyles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
                 <Icon name="close" style={homeStyles.closeIcon}></Icon>
             </TouchableOpacity>

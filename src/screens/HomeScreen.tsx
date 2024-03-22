@@ -34,21 +34,20 @@ const HomeScreen = ({navigation}:HomeProps) => {
     const [userTab , setUserTab] = useState([] as userData[]);
     const [isReload, setIsReload] = useState(false);
     const [ isDeleteConfirm , setIsDeleteConfirm] = useState(false);
+    const [ noUser , setNoUser ] = useState(false);
     const [ userToDelete, setUserToDelete] = useState<userData[]>([]);
     function  initUser() {
         const json = JsonFS.getInstance();
         JsonFS.waitForLoad().then(() => setUserTab(json.config.utilisateurs))
-        console.log('initiTab2: ', json.config.utilisateurs +"   deleteUser:" , deleteUser +"isDeleteConfirm", isDeleteConfirm);
     }
     initUser();
-    console.log ('reload :', isReload);
+
     if (isReload){
-        console.log('reload !')
+        setDeleteUser(false)
         initUser ();
         setNewName("");
         setNewSurname("");
         setUserToDelete([]);
-        setDeleteUser(false)
         setIsReload(false);
     }
     const handleStartActivity = () => {
@@ -65,9 +64,13 @@ const HomeScreen = ({navigation}:HomeProps) => {
     };
 
     if (isDeleteConfirm){
-            const json = JsonFS.getInstance();
-            // // TODO: faire un modal su userToDel est vide
-        console.log ("---supprimer !! :"+ userToDelete)
+        if (userToDelete.length == 0){
+                setNoUser(true);
+                setIsDeleteConfirm(false);
+                return;
+        }
+        const json = JsonFS.getInstance();
+        setDeleteUser(false);
         setIsDeleteConfirm(false);
         userToDelete.forEach((userToDel) =>json.deleteUser(userToDel.prenom, userToDel.nom).then(()=>setIsReload(true)));
     }
@@ -77,11 +80,9 @@ const HomeScreen = ({navigation}:HomeProps) => {
             // enlever prenomToDel et nomToDel de userToDelete
             const updatedUsers = userToDelete.filter(user => !(user.prenom === prenomToDel && user.nom === nomToDel));
             setUserToDelete(updatedUsers);
-            console.log("userToDelete : ",userToDelete);
             return;
         }
         setUserToDelete([...userToDelete, {prenom:prenomToDel, nom : nomToDel}]);
-        console.log("userToDelete : ",userToDelete);
 
     }
     return (
@@ -126,7 +127,8 @@ const HomeScreen = ({navigation}:HomeProps) => {
                     keyExtractor={(item) => item.prenom + item.nom}
                 />
             </View>
-            <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible} warningLabel={"Veuillez sélectionner un utilisateur❗"}/>
+            <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible} warningLabel={"Aucun n'utilisateurs sélectionner"}/>
+            <WarningModal setWarningModalVisible={setNoUser} modalVisible={noUser} warningLabel={"Veuillez sélectionner un utilisateur à supprimer"}/>
             <TouchableOpacity  onPress={ deleteUser ? ()=> {} : ()=>handleStartActivity()} style={deleteUser? [homeStyles.button,homeStyles.greyButtonColor]: [homeStyles.button,homeStyles.blueButtonColor]}>
             <Text style={homeStyles.buttonText}> 🚀 Démarrer une activité</Text>
         </TouchableOpacity>
