@@ -35,6 +35,7 @@ export default class JsonFS {
         let configLoaded: boolean = false
         let outputLoaded: boolean = false
 
+
         console.debug("Constructing JsonFS...")
 
         // NOTE: This part need test for iOS

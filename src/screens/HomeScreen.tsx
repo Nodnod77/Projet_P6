@@ -38,14 +38,15 @@ const HomeScreen = ({navigation}:HomeProps) => {
     function  initUser() {
         const json = JsonFS.getInstance();
         JsonFS.waitForLoad().then(() => setUserTab(json.config.utilisateurs))
+        console.log('initiTab2: ', json.config.utilisateurs +"   deleteUser:" , deleteUser +"isDeleteConfirm", isDeleteConfirm);
     }
     initUser();
+    console.log ('reload :', isReload);
     if (isReload){
+        console.log('reload !')
         initUser ();
-
         setNewName("");
         setNewSurname("");
-        setIsDeleteConfirm(false)
         setUserToDelete([]);
         setDeleteUser(false)
         setIsReload(false);
@@ -66,10 +67,9 @@ const HomeScreen = ({navigation}:HomeProps) => {
     if (isDeleteConfirm){
             const json = JsonFS.getInstance();
             // // TODO: faire un modal su userToDel est vide
-        console.log ("supprimer :"+ userToDelete)
-        //json.deleteUser(userToDelete[1].prenom, userToDelete[1].nom);
+        console.log ("---supprimer !! :"+ userToDelete)
+        setIsDeleteConfirm(false);
         userToDelete.forEach((userToDel) =>json.deleteUser(userToDel.prenom, userToDel.nom).then(()=>setIsReload(true)));
-
     }
 
     const handleUserToDeleteSelection = (prenomToDel: string, nomToDel: string )=>{
@@ -218,9 +218,9 @@ export const homeStyles = StyleSheet.create({
     buttonText :{
         color : "white",
         padding: RFPercentage (1),
-        marginRight: RFPercentage(1),
         fontSize: RFPercentage (3.5),
-        fontWeight: "bold",
+        marginRight: RFPercentage(1),
+
     },
     radioButton: {
         paddingVertical: 12,
