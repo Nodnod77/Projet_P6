@@ -32,49 +32,54 @@ export default class JsonFS {
     }
 
     private constructor() {
-        let first: boolean = false
-        let second: boolean = false
+        let configLoaded: boolean = false
+        let outputLoaded: boolean = false
 
         console.debug("Constructing JsonFS...")
 
         // NOTE: This part need test for iOS
         JsonFS.loadPaths()
 
-        // Load config.json
-        RNFS.exists(configFile).then((resConf) => {
-            if(resConf){
-                RNFS.readFile(configFile)
-                    .then((result) => {
-                        JsonFS.config = JSON.parse(result).config
-                        first = true
-                        if (first && second) JsonFS.isLoaded = true
-                    })
-                    .catch((err) => {
-                        JsonFS.loadingFailure = true
-                        console.error("Couldn't load config file, see below")
-                        console.error(err.toString())
-                    })
-                // Load output.json
-                RNFS.exists(outputFile).then((resOutp) => {
-                    if(resOutp){
-                        RNFS.readFile(outputFile)
-                            .then((result) => {
-                                JsonFS.output = JSON.parse(result).output
-                                second = true
-                                if(first && second) JsonFS.isLoaded = true
-                            })
-                            .catch((err) => {
-                                JsonFS.loadingFailure = true
-                                console.error("Couldn't load output file, see below")
-                                console.error(err.toString())
-                            })
-                    }else{
-                        console.error("Output file is missing, but config file is here...")
-                    }
-                })
-            }else{
-                // Queue a macro task to rebuild JsonFS
+        new Promise(async () => {
+            // Load config.json
+            await RNFS.exists(configFile).then(async (resConf) => {
+                if(resConf){
+                    await RNFS.readFile(configFile)
+                        .then((result) => {
+                            JsonFS.config = JSON.parse(result).config
+                            configLoaded = true
+                        })
+                        .catch((err) => {
+                            JsonFS.loadingFailure = true
+                            console.error("Couldn't load config file, see below")
+                            console.error(err.toString())
+                        })
+                }
+            })
+
+            // Load output.json
+            await RNFS.exists(outputFile).then(async (resOutp) => {
+                if(resOutp){
+                    await RNFS.readFile(outputFile)
+                        .then((result) => {
+                            JsonFS.output = JSON.parse(result).output
+                            outputLoaded = true
+                        })
+                        .catch((err) => {
+                            JsonFS.loadingFailure = true
+                            console.error("Couldn't load output file, see below")
+                            console.error(err.toString())
+                        })
+                }
+            })
+
+            if(configLoaded && outputLoaded) // Everything is alright
+                JsonFS.isLoaded = true
+            else if(!configLoaded && !outputLoaded){ // No Problem, files are being created...
+                // Queue a macro task to rebuild JsonFS after file creation is finished
                 setTimeout(() => JsonFS.instance = new JsonFS(), 0)
+            }else if(!configLoaded || !outputLoaded){ // Error
+                throw new Error("Error loading files, try relaunching app...")
             }
         })
     }
@@ -82,7 +87,7 @@ export default class JsonFS {
     private write(file: string) {
         RNFS.writeFile(
             file === "config" ? configFile : outputFile,
-            `{"${file}": ${JSON.stringify(file === "config" ? JsonFS.config : JsonFS.output)}}`
+            `{"${file}": ${JSON.stringify(file === "config" ? JsonFS.config : JsonFS.output, null, "\t")}}`
         )
             .catch((err) => {
                 console.error(`Couldn't append to ${file} file, see below`)
@@ -139,7 +144,8 @@ export default class JsonFS {
         await JsonFS.waitForLoad()
 
         JsonFS.config.utilisateurs.splice(
-            JsonFS.config.utilisateurs.indexOf({prenom: name, nom: surname})
+            JsonFS.config.utilisateurs.indexOf({prenom: name, nom: surname}),
+            1
         )
         this.write("config");
     }

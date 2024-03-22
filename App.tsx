@@ -17,18 +17,23 @@ function App(): React.JSX.Element {
 
   JsonFS.loadPaths() // Get configFile and outputFile
 
-  RNFS.exists(configFile).then((res) => {
-    conf = res
-    RNFS.exists(outputFile).then((res) => {
-      outp = res
-      if(!conf && !outp){
-        console.debug("First time launching app, init...")
-        initApp()
-      }else if(!conf || !outp){
-        throw new Error("One of the two files is missing ! App should be reinstalled")
-      }
+  new Promise(async () => {
+    await RNFS.exists(configFile).then((res) => {
+      conf = res
     })
+    await RNFS.exists(outputFile).then((res) => {
+      outp = res
+    })
+
+    if(!conf && !outp){
+      console.debug("First time launching app, init...")
+      initApp()
+    }else if(!conf || !outp){
+      console.error(`${conf ? "Output" : "Config"} file is missing, regenerating it`)
+      initApp(conf, outp)
+    }
   })
+
 
   return (
       <StackNavigator/>

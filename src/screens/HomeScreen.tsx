@@ -220,9 +220,9 @@ export const homeStyles = StyleSheet.create({
     buttonText :{
         color : "white",
         padding: RFPercentage (1),
-        fontSize: RFPercentage (3.5),
         marginRight: RFPercentage(1),
-
+        fontSize: RFPercentage (3.5),
+        fontWeight: "bold",
     },
     radioButton: {
         paddingVertical: 12,

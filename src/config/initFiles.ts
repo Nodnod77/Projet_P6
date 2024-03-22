@@ -1,10 +1,12 @@
 import * as RNFS from "react-native-fs";
 import {configFile, outputFile} from "../components/jsonFS.ts";
 
-export default function initApp() {
-    RNFS.writeFile(
-        configFile,
-        `{
+export default function initApp(dontRegenConfig?: boolean, dontRegenOutput?: boolean) {
+    if(!dontRegenConfig){
+        console.debug("Generating config file...")
+        RNFS.writeFile(
+            configFile,
+            `{
             "config": {
                 "utilisateurs": [
                     {
@@ -46,18 +48,22 @@ export default function initApp() {
                 ]
             }
         }`
-    )
-        .catch((err) => {
-            console.error("Couldnt create config file, failure...")
-            throw err
-        })
+        )
+            .catch((err) => {
+                console.error("Couldnt create config file, failure...")
+                throw err
+            })
+    }
 
-    RNFS.writeFile(
-        outputFile,
-        `{"output": []}`
-    )
-        .catch((err) => {
-            console.error("Couldnt create output file, failure...")
-            throw err
-        })
+    if(!dontRegenOutput){
+        console.debug("Generating output file...")
+        RNFS.writeFile(
+            outputFile,
+            `{"output": []}`
+        )
+            .catch((err) => {
+                console.error("Couldnt create output file, failure...")
+                throw err
+            })
+    }
 }

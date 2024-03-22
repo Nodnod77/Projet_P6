@@ -61,6 +61,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     return (
         <ScrollView style={{
             paddingHorizontal: RFPercentage(3.9),
+            backgroundColor: "#FFF"
         }}>
 
             {/* ------------------------------------------ Print User ---------------------------------------------- */}
