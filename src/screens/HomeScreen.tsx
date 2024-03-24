@@ -127,7 +127,7 @@ const HomeScreen = ({navigation}:HomeProps) => {
                     keyExtractor={(item) => item.prenom + item.nom}
                 />
             </View>
-            <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible} warningLabel={"Aucun n'utilisateurs sélectionner"}/>
+            <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible} warningLabel={"Aucun utilisateur sélectionné"}/>
             <WarningModal setWarningModalVisible={setNoUser} modalVisible={noUser} warningLabel={"Veuillez sélectionner un utilisateur à supprimer"}/>
             <TouchableOpacity  onPress={ deleteUser ? ()=> {} : ()=>handleStartActivity()} style={deleteUser? [homeStyles.button,homeStyles.greyButtonColor]: [homeStyles.button,homeStyles.blueButtonColor]}>
             <Text style={homeStyles.buttonText}> 🚀 Démarrer une activité</Text>
@@ -155,7 +155,8 @@ export const homeStyles = StyleSheet.create({
         //justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgba(45,155,240,0.52)',
-        height: '37%',
+        maxHeight: '37%',
+        minHeight:'20%',
         width: '60%',
         paddingVertical: RFPercentage(2),
         padding: RFPercentage (3),
@@ -205,7 +206,8 @@ export const homeStyles = StyleSheet.create({
 
     button: {
         marginTop: RFPercentage(5),
-
+        position : 'absolute',
+        top : RFPercentage(68),
         padding: RFPercentage(2),
         borderRadius: 10,
         alignSelf: 'center',

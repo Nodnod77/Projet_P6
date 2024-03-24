@@ -4,14 +4,27 @@ import {RFPercentage} from "react-native-responsive-fontsize";
 
 export const activityStyles = StyleSheet.create({
     image: {
-        width: RFPercentage(6),
-        height: RFPercentage(6),
-        marginRight: RFPercentage(1)
+        /*width: RFPercentage(6),
+        height: RFPercentage(6),*/
+        marginRight: RFPercentage(1),
+
+
     },
+    imageSize:{
+        width: RFPercentage(4),
+        height: RFPercentage(4),
+
+    },
+
+    imageSize2:{
+        width: RFPercentage(6.7),
+        height: RFPercentage(6.7),
+    },
+
     text: {
         fontSize: RFPercentage(2.4),
         textAlignVertical: "center",
-        marginHorizontal: RFPercentage(0.9)
+        marginHorizontal: RFPercentage(0.7)
     },
     selectableText: {
         color: "#000",
@@ -64,14 +77,16 @@ export const activityStyles = StyleSheet.create({
         padding: RFPercentage(1.4),
     },
     buttonStart: {
-        height: RFPercentage(16),
-        width: RFPercentage(44),
+        height: RFPercentage(19),
+        width: RFPercentage(50),
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#2D9BF0",
         borderRadius: RFPercentage(2),
-        elevation: 8
+        elevation: 8,
+        marginTop:RFPercentage(3),
+
     },
     buttonEnd: {
         height: RFPercentage(9),

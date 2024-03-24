@@ -4,9 +4,12 @@ import {createNativeStackNavigator, NativeStackHeaderProps} from "@react-navigat
 import { userData } from "../../types/dataTypes";
 import HomeScreen from "../../screens/HomeScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Activity from "../../screens/activity";
+import Activity, {ActivityContext} from "../../screens/activity";
 import {Pressable, StyleSheet, Text, View} from "react-native";
 import {RFPercentage} from "react-native-responsive-fontsize";
+import {useContext, useEffect} from "react";
+import {useActivity} from "../context";
+import ActivityScreen from "../../screens/activity";
 
 // Définissez le type des paramètres de la pile
 export type StackParamList = {
@@ -17,8 +20,16 @@ export type StackParamList = {
 const Stack = createNativeStackNavigator<StackParamList>();
 
 const Header = (props: NativeStackHeaderProps) => {
+    const start = useActivity();
+    /*useEffect(() => {
+    }, [start.started]);*/
     if(props.options.headerLeft == undefined) return <View></View>
 
+    console.log("-------START :",start);
+
+    if (start.started){
+        console.log('trueee')
+    }
     return (
         <View style={{
             backgroundColor: "#2D9BF0",
@@ -26,12 +37,12 @@ const Header = (props: NativeStackHeaderProps) => {
             flexDirection: "row",
             alignItems: "center"
         }}>
-            <Pressable onTouchEnd={() => props.navigation.navigate("HomeScreen")} style={{
-                paddingLeft: '1.5%', //  3% de la taille de la vue
+            <Pressable onTouchEnd={ start.started?()=>{} :() => props.navigation.navigate("HomeScreen")} style={{
+                paddingLeft: '1.5%',
                 paddingRight:'10%',
                 margin:'2.5%',
             }}>
-                {props.options.headerLeft({canGoBack: true})}
+                { props.options.headerLeft({canGoBack: true})}
             </Pressable>
             <Text style={{
                 color: "white",
@@ -40,6 +51,7 @@ const Header = (props: NativeStackHeaderProps) => {
         </View>
     )
 }
+
 
 const StackNavigator = () => {
     return (
@@ -65,7 +77,7 @@ const StackNavigator = () => {
                 />
                 <Stack.Screen
                     name={"ActivityScreen"}
-                    component={Activity}
+                    component={ActivityScreen}
                     options={{
                         title: "Mon activité",
                         headerLeft: () => <Icon name="arrow-left" style={{

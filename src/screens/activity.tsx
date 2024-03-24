@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {createContext, useState} from 'react';
 import {
     Alert, Animated,
     Image,
@@ -20,17 +20,19 @@ import JsonFS from "../components/jsonFS.ts";
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import ScrollView = Animated.ScrollView;
+import {ActivityProvider, useActivity} from "../components/context";
 
 
 interface ActivityProps {
     route: RouteProp<StackParamList, 'ActivityScreen'>;
 }
+
 function Activity({ route }: ActivityProps): React.ReactElement{
     // Params
     const { prenom, nom }: userData = route.params.user;
 
     // Time
-    const [started, setStarted] = useState(false)
+    const { started, setStarted } = useActivity();
     const [startTime, setStartTime] = useState(0)
     const [time, setTime] = useState(0)
     // Clock counter doesn't reset itself when revealed, here is a little hack : reload component via state
@@ -54,51 +56,56 @@ function Activity({ route }: ActivityProps): React.ReactElement{
         setProduitsData(jsHandle.config.produits)
         setUtilisationssData(jsHandle.config.pratiques)
     })
+    if (started){
 
+        const conxt = useActivity();
+        console.log('ca a commencé',conxt.started);
+    }
     // Warning modal
     const [modalVisible, setModalVisible] = useState(false)
 
     return (
         <ScrollView style={{
-            paddingHorizontal: RFPercentage(3.9),
+            paddingHorizontal: RFPercentage(2.5),
             backgroundColor: "#FFF"
         }}>
 
             {/* ------------------------------------------ Print User ---------------------------------------------- */}
-            <VSpace margin={RFPercentage(1.8)}/>
+            <VSpace margin={RFPercentage(0.5)}/>
             <View style={{flexDirection: "row"}}>
                 <Image
                     source={require('../styles/assets/id-card.png')}
-                    style={activityStyles.image}
+                    style={[activityStyles.image,activityStyles.imageSize2,{marginRight: RFPercentage(2)}]}
+
                 />
-                <Text style={[activityStyles.text, {color: "#000"}]}>
+                <Text style={[activityStyles.text, { fontWeight:"bold", fontStyle:'italic',color:'rgba(55,55,59,0.82)'}]}>
                     {prenom} {nom}
                 </Text>
             </View>
             <VSpace margin={RFPercentage(0.4)}/>
             <View>
-                <Text style={activityStyles.text}>Veuillez renseigner les champs suivants :</Text>
+                <Text style={[activityStyles.text, {paddingTop: RFPercentage(1)}]}>Veuillez renseigner les champs suivants :</Text>
             </View>
 
             {/* --------------------------------------- Select options --------------------------------------------- */}
             <View style={{marginRight: RFPercentage(2.2), marginLeft: RFPercentage(4)}}>
                 <VSpace />
-                <InputLine icon={require("../styles/assets/location.png")} name={"Lieu"}>
+                <InputLine icon={require("../styles/assets/location.png")} name={"Lieu"} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.2)}]}>
                     <DropList value={lieu} setValue={setLieu} data={lieuData} />
                 </InputLine>
                 <VSpace/>
-                <InputLine icon={require("../styles/assets/todo.png")} name={"Activité"}>
+                <InputLine icon={require("../styles/assets/todo.png")} imageSize={activityStyles.imageSize} name={"Activité"}>
                     <DropList value={activite} setValue={setActivite} data={activiteData} />
                 </InputLine>
                 <VSpace/>
-                <InputLine icon={require("../styles/assets/chemical.png")} name={"Produits"}>
+                <InputLine icon={require("../styles/assets/chemical.png")} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.6)}]} name={"Produits"}>
                     <ModalActivity
                         value={produits} setValue={setProduits}
                         name={"Produits"}
                         data={produitsData} />
                 </InputLine>
                 <VSpace/>
-                <InputLine icon={require("../styles/assets/hand.png")} name={"Mode d'utilisations"}>
+                <InputLine icon={require("../styles/assets/hand.png")} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.6), marginTop:RFPercentage(2),}]} name={"Mode\nd'utilisations"}>
                     <ModalActivity
                         value={utilisations} setValue={setUtilisationss}
                         name={"Mode d'utilisations"}
@@ -109,7 +116,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
             {/* ---------------------------- If Started, show stop buttons ------------------------------------- */}
             <View style={{display: started ? undefined : "none", paddingBottom: RFPercentage(3)}}>
                 <VSpace margin={RFPercentage(1)}/>
-                <View style={{alignItems: "center", margin: RFPercentage(1)}}>
+                <View style={{alignItems: "center", marginTop: RFPercentage(1),marginBottom:RFPercentage(2)}}>
                     <CountdownCircleTimer
                         key={clockKey} // Needed to reset clock counter when revealed
                         size={RFPercentage(11)}
@@ -129,7 +136,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                             let m = Math.floor(t / 60 - h * 60)
                             let s = Math.floor(t - h * 3600 - m * 60)
                             return (
-                                <Text style={{fontSize: RFPercentage(2)}}>
+                                <Text style={{fontSize: RFPercentage(1.8)}}>
                                     {`${h < 10 ? "0" : ""}${h}:${m < 10 ? "0" : ""}${m}:${s}`}
                                 </Text>
                             )
@@ -205,4 +212,14 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     )
 }
 
-export default Activity
+const ActivityScreen = ({ route }) => {
+    return (
+        <ActivityProvider>
+            <Activity route={route} />
+        </ActivityProvider>
+    );
+};
+
+export default ActivityScreen;
+
+

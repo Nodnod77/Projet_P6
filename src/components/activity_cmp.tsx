@@ -1,5 +1,5 @@
 import React from "react";
-import {Image, ImageSourcePropType, Pressable, Text, View} from "react-native";
+import {Image, ImageSourcePropType, Pressable, StyleProp, Text, View, ViewStyle} from "react-native";
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {activityStyles} from "../styles/activityStyles.ts";
 import {genericData} from "../types/dataTypes.tsx";
@@ -171,12 +171,13 @@ interface InputLineProps {
     icon: ImageSourcePropType,
     name: string,
     children: React.JSX.Element
+        imageSize : StyleProp<ViewStyle>
 }
 export const InputLine = (props: InputLineProps): React.JSX.Element => {
     return (
         <View style={{flexDirection: "row"}}>
-            <Image source={props.icon} style={activityStyles.image} />
-            <Text style={[activityStyles.text, {color: "#000", width: RFPercentage(18)}]}>{props.name}</Text>
+            <Image source={props.icon} style={[activityStyles.image, props.imageSize]} />
+            <Text style={[activityStyles.text, {color: "#000", width: RFPercentage(17), marginLeft:RFPercentage(1),fontSize:RFPercentage(3),marginBottom:RFPercentage(1.5)}]}>{props.name}</Text>
             {props.children}
         </View>
     )
