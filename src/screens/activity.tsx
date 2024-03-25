@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
     Alert, Animated,
     Image,
@@ -13,7 +13,7 @@ import {
     WarningModal
 } from "../components/activity_cmp.tsx";
 import {activityStyles} from "../styles/activityStyles.ts";
-import {outputT, userData} from "../types/dataTypes.ts";
+import {compteurT, outputT, userData} from "../types/dataTypes.ts";
 import {StackParamList} from "../components/navigation/StackNavigator.tsx";
 import {RouteProp} from '@react-navigation/native';
 import JsonFS from "../components/jsonFS.ts";
@@ -21,7 +21,27 @@ import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import ScrollView = Animated.ScrollView;
 import {useActivity} from "../components/context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
+async function sort(data: string[], prenom: string, nom: string, attr: string): Promise<Array<string>> {
+    let value = await AsyncStorage.getItem(prenom.toString() + nom.toString())
+
+    console.debug(attr)
+    if(value != null){
+        let save: compteurT[] = JSON.parse(value)[attr]
+        console.debug(save)
+        return data.sort((a, b) => {
+            let aIndex = save.findIndex((v) => v.nom === a)
+            let bIndex = save.findIndex((v) => v.nom === b)
+            if(aIndex == -1 && bIndex == -1) return 0
+            else if(aIndex == -1) return 1
+            else if(bIndex == -1) return -1
+            else return save[bIndex].compteur - save[aIndex].compteur
+        })
+    }else
+        return data
+}
 
 interface ActivityProps {
     route: RouteProp<StackParamList, 'ActivityScreen'>;
@@ -31,8 +51,6 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     // Params
     const { prenom, nom }: userData = route.params.user;
     const moment = require('moment-timezone');
-
-
     // Time
     const { started, setStarted } = useActivity();
     const [startTime, setStartTime] = useState("")
@@ -43,22 +61,27 @@ function Activity({ route }: ActivityProps): React.ReactElement{
 
     // Data for json output
     const [lieu, setLieu] = useState("")
-    const [lieuData, setLieuData] = useState([] as string[])
     const [activite, setActivite] = useState("")
-    const [activiteData, setActiviteData] = useState([] as string[])
     const [produits, setProduits] = useState([] as string[])
-    const [produitsData, setProduitsData] = useState([] as string[])
     const [utilisations, setUtilisations] = useState([] as string[])
-    const [utilisationsData, setUtilisationsData] = useState([] as string[])
+    const lieuData = useRef([] as string[])
+    const activiteData = useRef([] as string[])
+    const produitsData = useRef([] as string[])
+    const utilisationsData = useRef([] as string[])
+
+    // Force render
+    const [, render] = useState(false)
 
     // JSON handler
     const jsHandle = JsonFS.getInstance()
-    JsonFS.waitForLoad().then(() => {
-        setLieuData(jsHandle.config.lieux)
-        setActiviteData(jsHandle.config.activites)
-        setProduitsData(jsHandle.config.produits)
-        setUtilisationsData(jsHandle.config.pratiques)
+    JsonFS.waitForLoad().then(async () => {
+        lieuData.current = await sort(jsHandle.config.lieux, prenom, nom, "lieux")
+        activiteData.current = await sort(jsHandle.config.activites, prenom, nom, "activites")
+        produitsData.current = await sort(jsHandle.config.produits, prenom, nom, "produits")
+        utilisationsData.current = await sort(jsHandle.config.pratiques, prenom, nom, "pratiques")
+        render(true)
     })
+
     // Warning modal
     const [modalVisible, setModalVisible] = useState(false)
 
@@ -73,6 +96,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                 <Image
                     source={require('../styles/assets/id-card.png')}
                     style={[activityStyles.image,activityStyles.imageSize2,{marginRight: RFPercentage(2)}]}
+
                 />
                 <Text style={[activityStyles.text, { fontWeight:"bold", fontStyle:'italic',color:'rgba(55,55,59,0.82)'}]}>
                     {prenom} {nom}
@@ -87,25 +111,25 @@ function Activity({ route }: ActivityProps): React.ReactElement{
             <View style={{marginRight: RFPercentage(2.2), marginLeft: RFPercentage(4)}}>
                 <VSpace />
                 <InputLine icon={require("../styles/assets/location.png")} name={"Lieu"} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.2)}]}>
-                    <DropList value={lieu} setValue={setLieu} data={lieuData} />
+                    <DropList value={lieu} setValue={setLieu} data={lieuData.current} saveName={"lieux"} user={{prenom: prenom, nom: nom}} />
                 </InputLine>
                 <VSpace/>
                 <InputLine icon={require("../styles/assets/todo.png")} imageSize={activityStyles.imageSize} name={"Activité"}>
-                    <DropList value={activite} setValue={setActivite} data={activiteData} />
+                    <DropList value={activite} setValue={setActivite} data={activiteData.current} saveName={"activites"} user={{prenom: prenom, nom: nom}} />
                 </InputLine>
                 <VSpace/>
                 <InputLine icon={require("../styles/assets/chemical.png")} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.6),marginTop:RFPercentage(1)}]} name={"Produits"}>
                     <ModalActivity
                         value={produits} setValue={setProduits}
                         name={"Produits"}
-                        data={produitsData} />
+                        data={produitsData.current} />
                 </InputLine>
                 <VSpace/>
                 <InputLine icon={require("../styles/assets/hand.png")} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.6), marginTop:RFPercentage(2),}]} name={"Modes d'utilisation"}>
                     <ModalActivity
                         value={utilisations} setValue={setUtilisations}
                         name={"Modes d'utilisation"}
-                        data={utilisationsData} />
+                        data={utilisationsData.current} />
                 </InputLine>
             </View>
 
@@ -155,7 +179,6 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                             date_debut: startTime,
                             duree: Math.floor((moment.tz('Europe/Paris').diff(startTime) / 1000)) // From ms to seconds
                         }
-                        console.log("duree:",entry.duree, "date_debut: ", entry.date_debut);
                         jsHandle.addEntry(entry)
 
                         // Reset time

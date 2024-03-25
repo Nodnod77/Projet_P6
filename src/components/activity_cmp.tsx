@@ -1,8 +1,8 @@
 import React from "react";
-import {Image, ImageSourcePropType, Pressable, StyleProp, Text, View, ViewStyle} from "react-native";
+import {Image, ImageSourcePropType, ImageStyle, Pressable, StyleProp, Text, View} from "react-native";
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {activityStyles} from "../styles/activityStyles.ts";
-import {genericData} from "../types/dataTypes.ts";
+import {genericData, userData} from "../types/dataTypes.ts";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import {homeStyles} from "../screens/HomeScreen.tsx";
 import {CommonModal} from "./commonModal.tsx";
@@ -141,7 +141,9 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
 interface DropListProps {
     data: string[],
     value: string,
-    setValue: React.Dispatch<React.SetStateAction<string>>
+    setValue: React.Dispatch<React.SetStateAction<string>>,
+    saveName: string,
+    user: userData,
 }
 export const DropList = (props: DropListProps): React.JSX.Element => {
     let dataAsObj: genericData[] =
@@ -170,8 +172,8 @@ export const DropList = (props: DropListProps): React.JSX.Element => {
 interface InputLineProps {
     icon: ImageSourcePropType,
     name: string,
-    children: React.JSX.Element
-        imageSize : StyleProp<ViewStyle>
+    children: React.JSX.Element,
+    imageSize : StyleProp<ImageStyle>
 }
 export const InputLine = (props: InputLineProps): React.JSX.Element => {
     return (
