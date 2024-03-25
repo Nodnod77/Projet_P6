@@ -67,7 +67,6 @@ const HomeScreen = ({navigation}:HomeProps): React.ReactElement => {
         if (userToDelete.length == 0){
                 setNoUser(true);
                 setIsDeleteConfirm(false);
-                return;
         }
         const json = JsonFS.getInstance();
         setDeleteUser(false);

@@ -7,20 +7,15 @@ export const activityStyles = StyleSheet.create({
         /*width: RFPercentage(6),
         height: RFPercentage(6),*/
         marginRight: RFPercentage(1),
-
-
     },
     imageSize:{
         width: RFPercentage(4),
         height: RFPercentage(4),
-
     },
-
     imageSize2:{
         width: RFPercentage(6.7),
         height: RFPercentage(6.7),
     },
-
     text: {
         fontSize: RFPercentage(2.4),
         textAlignVertical: "center",
