@@ -122,7 +122,7 @@ export default class JsonFS {
     public static async waitForLoad() {
         if(JsonFS.loadingFailure) return
         while(! JsonFS.isLoaded){
-            console.log("Files still not loaded...")
+            console.debug("Waiting for files to finish loading...") // MAYBEDO: remove me
             await new Promise(f => setTimeout(f, 600));
         }
     }

@@ -116,7 +116,7 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
                     renderSelectedItem={renderSelectedItem}
                 />
                 <Pressable
-                    style={[activityStyles.buttonClose, {alignSelf: "flex-start"}]}
+                    style={[activityStyles.buttonClose]}
                     onPress={() => setModalVisible(!modalVisible)}>
                     <Image source={require("../styles/assets/cross.png")}
                            style={{width: RFPercentage(2.9), height: RFPercentage(2.9)}} />
