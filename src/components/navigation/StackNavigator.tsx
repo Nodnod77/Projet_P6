@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator, NativeStackHeaderProps} from "@react-navigation/native-stack";
-import { userData } from "../../types/dataTypes";
+import { userData } from "../../types/dataTypes.ts";
 import HomeScreen from "../../screens/HomeScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Pressable, Text, View} from "react-native";
@@ -85,6 +85,8 @@ const StackNavigatorComp = () => {
     );
 };
 
+// Needed to disable back button when the activity is started
+// Could be refactored in a more intuitive way ?
 const StackNavigator = () => {
     return (
         <ActivityProvider>

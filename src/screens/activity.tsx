@@ -13,7 +13,7 @@ import {
     WarningModal
 } from "../components/activity_cmp.tsx";
 import {activityStyles} from "../styles/activityStyles.ts";
-import {outputT, userData} from "../types/dataTypes.tsx";
+import {outputT, userData} from "../types/dataTypes.ts";
 import {StackParamList} from "../components/navigation/StackNavigator.tsx";
 import {RouteProp} from '@react-navigation/native';
 import JsonFS from "../components/jsonFS.ts";
@@ -59,8 +59,6 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     })
     // Warning modal
     const [modalVisible, setModalVisible] = useState(false)
-
-    if(started) console.log("started in activity")
 
     return (
         <ScrollView style={{

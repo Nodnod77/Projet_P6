@@ -1,9 +1,9 @@
-export interface userData {
+export type userData = {
     prenom:string,
     nom:string,
 }
 
-export interface genericData {
+export type genericData = {
     label: string,
 }
 
@@ -24,4 +24,16 @@ export type configT = {
     activites: string[],
     produits: string[],
     pratiques: string[],
+}
+
+export type compteurT = {
+    nom: string,
+    compteur: number
+}
+
+export type userSaveT = {
+    lieux: compteurT[],
+    activites: compteurT[],
+    produits: compteurT[],
+    pratiques: compteurT[]
 }

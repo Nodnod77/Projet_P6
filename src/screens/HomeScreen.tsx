@@ -9,7 +9,7 @@ import {
 import {Text} from 'react-native';
 import {StackParamList} from "../components/navigation/StackNavigator";
 
-import {userData} from "../types/dataTypes";
+import {userData} from "../types/dataTypes.ts";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import {CrudButton, CustomRadioButton, NewUserModal, WarningModal} from "../components/homeScreen_cmp";
 import JsonFS from "../components/jsonFS";
@@ -20,7 +20,7 @@ import {NavigationProp} from "@react-navigation/native";
 interface HomeProps  {
     navigation: NavigationProp<StackParamList, 'HomeScreen'>
 }
-const HomeScreen = ({navigation}:HomeProps) => {
+const HomeScreen = ({navigation}:HomeProps): React.ReactElement => {
 
     // state nom et prénom sélectionner dans la liste
     const [ name , setName] = React.useState('')

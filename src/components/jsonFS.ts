@@ -1,6 +1,7 @@
 import * as RNFS from "react-native-fs";
-import {configT, outputT} from "../types/dataTypes.tsx";
+import {compteurT, configT, outputT, userSaveT} from "../types/dataTypes.ts";
 import {Platform} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export var configFile: string = ""
@@ -163,8 +164,38 @@ export default class JsonFS {
     public async addEntry(
         entry: outputT
     ){
+        const update = (entryAttr: string, arr: compteurT[]) => {
+            let index = arr.findIndex((obj) => obj.nom === entryAttr)
+            if(index < 0) arr.push({nom: entryAttr, compteur: 1})
+            else arr[index].compteur++
+        }
+
         // Wait for loading to finish and check failure
         await JsonFS.waitForLoad()
+
+        let key = entry.prenom.toString() + entry.nom.toString()
+        AsyncStorage.getItem(key).then((value) => {
+            if(value == null){
+                let save: userSaveT = {
+                    lieux: [{nom: entry.lieu, compteur: 1}],
+                    activites: [{nom: entry.activite, compteur: 1}],
+                    produits: entry.produits.map<compteurT>((v) => {return {nom: v, compteur: 1}}),
+                    pratiques: entry.pratiques.map<compteurT>((v) => {return {nom: v, compteur: 1}}),
+                }
+                //console.debug(save)
+                AsyncStorage.setItem(key, JSON.stringify(save))
+            }else{
+                let res: userSaveT = JSON.parse(value)
+                //console.debug(res)
+                update(entry.lieu, res.lieux)
+                update(entry.activite, res.activites)
+                entry.produits.forEach((produit) => update(produit, res.produits))
+                entry.pratiques.forEach((pratique) => update(pratique, res.pratiques))
+
+                //console.debug(res)
+                AsyncStorage.setItem(key, JSON.stringify(res))
+            }
+        })
 
         console.debug(entry) // TODO: Remove me
         JsonFS.output.push(entry)

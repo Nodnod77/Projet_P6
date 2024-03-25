@@ -15,7 +15,6 @@ export const ActivityContext = createContext<ActivityContextType>({
 export function ActivityProvider( {children}: {children: React.JSX.Element}): React.JSX.Element {
     const [started, setStarted] = useState(false);
 
-    console.log("Provider :" + started)
     return (
         <ActivityContext.Provider value={{ started, setStarted }}>
             {children}

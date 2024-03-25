@@ -2,7 +2,7 @@ import React from "react";
 import {Image, ImageSourcePropType, Pressable, StyleProp, Text, View, ViewStyle} from "react-native";
 import {Dropdown, MultiSelect} from "react-native-element-dropdown";
 import {activityStyles} from "../styles/activityStyles.ts";
-import {genericData} from "../types/dataTypes.tsx";
+import {genericData} from "../types/dataTypes.ts";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import {homeStyles} from "../screens/HomeScreen.tsx";
 import {CommonModal} from "./commonModal.tsx";
