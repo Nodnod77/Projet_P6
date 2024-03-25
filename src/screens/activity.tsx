@@ -30,10 +30,12 @@ interface ActivityProps {
 function Activity({ route }: ActivityProps): React.ReactElement{
     // Params
     const { prenom, nom }: userData = route.params.user;
+    const moment = require('moment-timezone');
+
 
     // Time
     const { started, setStarted } = useActivity();
-    const [startTime, setStartTime] = useState(0)
+    const [startTime, setStartTime] = useState("")
     const [time, setTime] = useState(0)
     // Clock counter doesn't reset itself when revealed, here is a little hack : reload component via state
     const [clockKey, clockReset] = useState(0)
@@ -73,7 +75,6 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                 <Image
                     source={require('../styles/assets/id-card.png')}
                     style={[activityStyles.image,activityStyles.imageSize2,{marginRight: RFPercentage(2)}]}
-
                 />
                 <Text style={[activityStyles.text, { fontWeight:"bold", fontStyle:'italic',color:'rgba(55,55,59,0.82)'}]}>
                     {prenom} {nom}
@@ -153,9 +154,10 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                             activite: activite,
                             produits: produits,
                             pratiques: utilisations,
-                            date_debut: new Date(startTime).toISOString(),
-                            duree: Math.floor((Date.now() - startTime) / 1000) // From ms to seconds
+                            date_debut: startTime,
+                            duree: Math.floor((moment.tz('Europe/Paris').diff(startTime) / 1000)) // From ms to seconds
                         }
+                        console.log("duree:",entry.duree, "date_debut: ", entry.date_debut);
                         jsHandle.addEntry(entry)
 
                         // Reset time
@@ -191,7 +193,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                     onPress={() => {
                         if(lieu !== "" && activite !== "") {
                             // Time
-                            setStartTime(Date.now)
+                            setStartTime(moment.tz('Europe/Paris').format())
                             setTime(0) // Just to be sure...
 
                             setStarted(true) // Switch buttons

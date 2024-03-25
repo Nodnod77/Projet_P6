@@ -130,7 +130,7 @@ const HomeScreen = ({navigation}:HomeProps): React.ReactElement => {
             <WarningModal setWarningModalVisible={setWarningModalVisible} modalVisible={modalVisible} warningLabel={"Aucun utilisateur sélectionné"}/>
             <WarningModal setWarningModalVisible={setNoUser} modalVisible={noUser} warningLabel={"Veuillez sélectionner un utilisateur à supprimer"}/>
             <TouchableOpacity  onPress={ deleteUser ? ()=> {} : ()=>handleStartActivity()} style={deleteUser? [homeStyles.button,homeStyles.greyButtonColor]: [homeStyles.button,homeStyles.blueButtonColor]}>
-            <Text style={homeStyles.buttonText}> 🚀 Démarrer une activité</Text>
+            <Text style={[homeStyles.buttonText,{fontSize: RFPercentage(4)}]}>🚀 Ouvrir le journal</Text>
         </TouchableOpacity>
 
 
