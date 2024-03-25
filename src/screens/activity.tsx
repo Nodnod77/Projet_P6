@@ -60,15 +60,16 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     // Warning modal
     const [modalVisible, setModalVisible] = useState(false)
 
+    if(started) console.log("started in activity")
+
     return (
         <ScrollView style={{
-            paddingHorizontal: RFPercentage(2.5),
             backgroundColor: "#FFF"
         }}>
 
             {/* ------------------------------------------ Print User ---------------------------------------------- */}
             <VSpace margin={RFPercentage(0.5)}/>
-            <View style={{flexDirection: "row"}}>
+            <View style={{flexDirection: "row",marginHorizontal:RFPercentage(2)}}>
                 <Image
                     source={require('../styles/assets/id-card.png')}
                     style={[activityStyles.image,activityStyles.imageSize2,{marginRight: RFPercentage(2)}]}
@@ -80,7 +81,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
             </View>
             <VSpace margin={RFPercentage(0.4)}/>
             <View>
-                <Text style={[activityStyles.text, {paddingTop: RFPercentage(1)}]}>Veuillez renseigner les champs suivants :</Text>
+                <Text style={[activityStyles.text, {paddingTop: RFPercentage(1),marginHorizontal:RFPercentage(2.5)}]}>Veuillez renseigner les champs suivants :</Text>
             </View>
 
             {/* --------------------------------------- Select options --------------------------------------------- */}
@@ -94,7 +95,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                     <DropList value={activite} setValue={setActivite} data={activiteData} />
                 </InputLine>
                 <VSpace/>
-                <InputLine icon={require("../styles/assets/chemical.png")} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.6)}]} name={"Produits"}>
+                <InputLine icon={require("../styles/assets/chemical.png")} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.6),marginTop:RFPercentage(1)}]} name={"Produits"}>
                     <ModalActivity
                         value={produits} setValue={setProduits}
                         name={"Produits"}
@@ -197,7 +198,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                         }else{
                             Alert.alert(
                                 'Il manque un ou plusieurs paramètres',
-                                'Veuillez au moins choisir une activitée et un lieu'
+                                'Veuillez au moins choisir une activité et un lieu'
                             )
                         }
                     }}>

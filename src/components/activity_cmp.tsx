@@ -175,9 +175,9 @@ interface InputLineProps {
 }
 export const InputLine = (props: InputLineProps): React.JSX.Element => {
     return (
-        <View style={{flexDirection: "row"}}>
+        <View style={{flexDirection: "row",marginRight:RFPercentage(5)}}>
             <Image source={props.icon} style={[activityStyles.image, props.imageSize]} />
-            <Text style={[activityStyles.text, {color: "#000", width: RFPercentage(17), marginLeft:RFPercentage(1),fontSize:RFPercentage(3),marginBottom:RFPercentage(1.5)}]}>{props.name}</Text>
+            <Text style={[activityStyles.text, {color: "#000", width: RFPercentage(17), marginLeft:RFPercentage(1),fontSize:RFPercentage(2.5),marginBottom:RFPercentage(1.8)}]}>{props.name}</Text>
             {props.children}
         </View>
     )
