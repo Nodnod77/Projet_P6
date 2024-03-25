@@ -38,6 +38,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     // Clock counter doesn't reset itself when revealed, here is a little hack : reload component via state
     const [clockKey, clockReset] = useState(0)
 
+
     // Data for json output
     const [lieu, setLieu] = useState("")
     const [lieuData, setLieuData] = useState([] as string[])
@@ -56,13 +57,10 @@ function Activity({ route }: ActivityProps): React.ReactElement{
         setProduitsData(jsHandle.config.produits)
         setUtilisationssData(jsHandle.config.pratiques)
     })
-    if (started){
-
-        const conxt = useActivity();
-        console.log('ca a commencé',conxt.started);
-    }
     // Warning modal
     const [modalVisible, setModalVisible] = useState(false)
+
+    if(started) console.log("started in activity")
 
     return (
         <ScrollView style={{
@@ -113,6 +111,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                 </InputLine>
             </View>
 
+            {/*TODO: Disable back button when started*/}
             {/* ---------------------------- If Started, show stop buttons ------------------------------------- */}
             <View style={{display: started ? undefined : "none", paddingBottom: RFPercentage(3)}}>
                 <VSpace margin={RFPercentage(1)}/>
@@ -146,6 +145,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                 <Pressable
                     style={activityStyles.buttonEnd}
                     onPress={() => {
+                        // TODO: Gérer changement d'heure, actuellment en UTC0, prendre l'heure de la tablette ?
                         // Save into json
                         let entry: outputT = {
                             prenom: prenom,
@@ -212,14 +212,7 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     )
 }
 
-const ActivityScreen = ({ route }) => {
-    return (
-        <ActivityProvider>
-            <Activity route={route} />
-        </ActivityProvider>
-    );
-};
 
-export default ActivityScreen;
+export default Activity;
 
 

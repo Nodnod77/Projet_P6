@@ -4,11 +4,9 @@ import {createNativeStackNavigator, NativeStackHeaderProps} from "@react-navigat
 import { userData } from "../../types/dataTypes";
 import HomeScreen from "../../screens/HomeScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Activity, {ActivityContext} from "../../screens/activity";
-import {Pressable, StyleSheet, Text, View} from "react-native";
+import {Pressable, Text, View} from "react-native";
 import {RFPercentage} from "react-native-responsive-fontsize";
-import {useContext, useEffect} from "react";
-import {useActivity} from "../context";
+import {ActivityProvider, useActivity} from "../context";
 import ActivityScreen from "../../screens/activity";
 
 // Définissez le type des paramètres de la pile
@@ -20,16 +18,9 @@ export type StackParamList = {
 const Stack = createNativeStackNavigator<StackParamList>();
 
 const Header = (props: NativeStackHeaderProps) => {
-    const start = useActivity();
-    /*useEffect(() => {
-    }, [start.started]);*/
+    const {started,  }= useActivity();
     if(props.options.headerLeft == undefined) return <View></View>
 
-    console.log("-------START :",start);
-
-    if (start.started){
-        console.log('trueee')
-    }
     return (
         <View style={{
             backgroundColor: "#2D9BF0",
@@ -37,12 +28,12 @@ const Header = (props: NativeStackHeaderProps) => {
             flexDirection: "row",
             alignItems: "center"
         }}>
-            <Pressable onTouchEnd={ start.started?()=>{} :() => props.navigation.navigate("HomeScreen")} style={{
+            <Pressable onTouchEnd={ started? ()=>{} : () => props.navigation.navigate("HomeScreen")} style={{
                 paddingLeft: '1.5%',
                 paddingRight:'10%',
                 margin:'2.5%',
             }}>
-                { props.options.headerLeft({canGoBack: true})}
+                { props.options.headerLeft({canGoBack: !started})}
             </Pressable>
             <Text style={{
                 color: "white",
@@ -53,7 +44,9 @@ const Header = (props: NativeStackHeaderProps) => {
 }
 
 
-const StackNavigator = () => {
+const StackNavigatorComp = () => {
+    const {started, } = useActivity()
+
     return (
         <NavigationContainer  >
             <Stack.Navigator
@@ -79,6 +72,7 @@ const StackNavigator = () => {
                     name={"ActivityScreen"}
                     component={ActivityScreen}
                     options={{
+                        headerBackVisible: !started,
                         title: "Mon activité",
                         headerLeft: () => <Icon name="arrow-left" style={{
                             color: "white", fontSize: RFPercentage(4)
@@ -91,5 +85,12 @@ const StackNavigator = () => {
     );
 };
 
+const StackNavigator = () => {
+    return (
+        <ActivityProvider>
+            <StackNavigatorComp />
+        </ActivityProvider>
+    );
+}
 
 export default StackNavigator;
