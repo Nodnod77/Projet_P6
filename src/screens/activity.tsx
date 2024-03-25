@@ -1,4 +1,4 @@
-import React, {createContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
     Alert, Animated,
     Image,
@@ -20,7 +20,7 @@ import JsonFS from "../components/jsonFS.ts";
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import ScrollView = Animated.ScrollView;
-import {ActivityProvider, useActivity} from "../components/context";
+import {useActivity} from "../components/context";
 
 
 interface ActivityProps {
@@ -48,8 +48,8 @@ function Activity({ route }: ActivityProps): React.ReactElement{
     const [activiteData, setActiviteData] = useState([] as string[])
     const [produits, setProduits] = useState([] as string[])
     const [produitsData, setProduitsData] = useState([] as string[])
-    const [utilisations, setUtilisationss] = useState([] as string[])
-    const [utilisationsData, setUtilisationssData] = useState([] as string[])
+    const [utilisations, setUtilisations] = useState([] as string[])
+    const [utilisationsData, setUtilisationsData] = useState([] as string[])
 
     // JSON handler
     const jsHandle = JsonFS.getInstance()
@@ -57,12 +57,10 @@ function Activity({ route }: ActivityProps): React.ReactElement{
         setLieuData(jsHandle.config.lieux)
         setActiviteData(jsHandle.config.activites)
         setProduitsData(jsHandle.config.produits)
-        setUtilisationssData(jsHandle.config.pratiques)
+        setUtilisationsData(jsHandle.config.pratiques)
     })
     // Warning modal
     const [modalVisible, setModalVisible] = useState(false)
-
-    if(started) console.log("started in activity")
 
     return (
         <ScrollView style={{
@@ -103,10 +101,10 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                         data={produitsData} />
                 </InputLine>
                 <VSpace/>
-                <InputLine icon={require("../styles/assets/hand.png")} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.6), marginTop:RFPercentage(2),}]} name={"Mode\nd'utilisations"}>
+                <InputLine icon={require("../styles/assets/hand.png")} imageSize={[activityStyles.imageSize,{marginLeft:RFPercentage(-0.6), marginTop:RFPercentage(2),}]} name={"Modes d'utilisation"}>
                     <ModalActivity
-                        value={utilisations} setValue={setUtilisationss}
-                        name={"Mode d'utilisations"}
+                        value={utilisations} setValue={setUtilisations}
+                        name={"Modes d'utilisation"}
                         data={utilisationsData} />
                 </InputLine>
             </View>

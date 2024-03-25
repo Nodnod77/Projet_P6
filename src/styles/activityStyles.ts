@@ -75,6 +75,8 @@ export const activityStyles = StyleSheet.create({
     buttonClose: {
         borderRadius: 100,
         padding: RFPercentage(1.4),
+        paddingLeft: RFPercentage(2.2),
+        alignSelf: "center",
     },
     buttonStart: {
         height: RFPercentage(19),
