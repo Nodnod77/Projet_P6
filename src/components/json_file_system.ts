@@ -182,22 +182,18 @@ export default class JsonFS {
                     produits: entry.produits.map<compteurT>((v) => {return {nom: v, compteur: 1}}),
                     pratiques: entry.pratiques.map<compteurT>((v) => {return {nom: v, compteur: 1}}),
                 }
-                //console.debug(save)
                 AsyncStorage.setItem(key, JSON.stringify(save))
             }else{
                 let res: userSaveT = JSON.parse(value)
-                //console.debug(res)
                 update(entry.lieu, res.lieux)
                 update(entry.activite, res.activites)
                 entry.produits.forEach((produit) => update(produit, res.produits))
                 entry.pratiques.forEach((pratique) => update(pratique, res.pratiques))
 
-                //console.debug(res)
                 AsyncStorage.setItem(key, JSON.stringify(res))
             }
         })
 
-        console.debug(entry) // TODO: Remove me
         JsonFS.output.push(entry)
         this.write("output")
     }

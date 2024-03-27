@@ -8,9 +8,9 @@
 import React from 'react';
 import * as RNFS from 'react-native-fs'
 
-import StackNavigator from "./src/components/navigation/StackNavigator.tsx";
-import JsonFS, {configFile, outputFile} from "./src/components/jsonFS.ts";
-import initApp from "./src/config/initFiles.ts";
+import StackNavigator from "./src/components/navigation/stack_navigator.tsx";
+import JsonFS, {configFile, outputFile} from "./src/components/json_file_system.ts";
+import initApp from "./src/config/init_files.ts";
 
 function App(): React.JSX.Element {
   let conf = false, outp = false
@@ -29,7 +29,7 @@ function App(): React.JSX.Element {
       console.debug("First time launching app, init...")
       initApp()
     }else if(!conf || !outp){
-      console.error(`${conf ? "Output" : "Config"} file is missing, regenerating it`)
+      console.debug(`${conf ? "Output" : "Config"} file is missing, regenerating it`)
       initApp(conf, outp)
     }
   })

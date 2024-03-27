@@ -7,9 +7,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {Pressable, SafeAreaView, Text, View} from "react-native";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import {ActivityProvider, useActivity} from "../context";
-import ActivityScreen from "../../screens/activity";
+import ActivityScreen from "../../screens/ActivityScreen.tsx";
 import {useState} from "react";
-import {WarningModal} from "../homeScreen_cmp";
+import {WarningModal} from "../home_cmp.tsx";
 
 // Définissez le type des paramètres de la pile
 export type StackParamList = {
@@ -65,7 +65,7 @@ const Header = (props: NativeStackHeaderProps) => {
 
 
 const StackNavigatorComp = () => {
-    const {started, } = useActivity()
+    const {started, } = useActivity() // Is this useless ?
 
     return (
         <NavigationContainer  >

@@ -7,12 +7,12 @@ import {
     FlatList
 } from 'react-native';
 import {Text} from 'react-native';
-import {StackParamList} from "../components/navigation/StackNavigator";
+import {StackParamList} from "../components/navigation/stack_navigator.tsx";
 
 import {userData} from "../types/dataTypes.ts";
 import { RFPercentage } from "react-native-responsive-fontsize";
-import {CrudButton, CustomRadioButton, NewUserModal, WarningModal} from "../components/homeScreen_cmp";
-import JsonFS from "../components/jsonFS";
+import {CrudButton, CustomRadioButton, NewUserModal, WarningModal} from "../components/home_cmp.tsx";
+import JsonFS from "../components/json_file_system.ts";
 import {NavigationProp} from "@react-navigation/native";
 
 

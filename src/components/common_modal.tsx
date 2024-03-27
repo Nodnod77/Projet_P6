@@ -1,6 +1,6 @@
 import {modalStyles} from "../styles/modalStyles.ts";
 import React from "react";
-import {Modal, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from "react-native";
+import {Modal, StyleProp, TouchableOpacity, View, ViewStyle} from "react-native";
 
 
 const ExitModal = ({setModalVisible}: any): React.JSX.Element => {
@@ -18,7 +18,7 @@ interface CommonModalProps {
     children: React.JSX.Element | React.JSX.Element[]
     modalViewStyle?: StyleProp<ViewStyle>
 }
-export const CommonModal = (props: CommonModalProps) => {
+export const Common_modal = (props: CommonModalProps) => {
     return (
         <Modal
             animationType="fade"

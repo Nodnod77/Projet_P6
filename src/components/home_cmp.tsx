@@ -8,8 +8,8 @@ interface WarningModalProps {
     setWarningModalVisible : (arg0: boolean) => void,
     warningLabel : string,
 }
-import JsonFS from './jsonFS';
-import {CommonModal} from "./commonModal.tsx";
+import JsonFS from './json_file_system.ts';
+import {Common_modal} from "./common_modal.tsx";
 
 
 interface CustomRadioButtonProps {
@@ -43,7 +43,7 @@ export const CustomRadioButton = ({ label , selected, onSelect, deleteUser} : Cu
 export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisible, modalVisible,warningLabel }) => {
 
     return (
-        <CommonModal modalVisible={modalVisible} setModalVisible={setWarningModalVisible} modalViewStyle={{width: RFPercentage(43), padding : RFPercentage(4)}}>
+        <Common_modal modalVisible={modalVisible} setModalVisible={setWarningModalVisible} modalViewStyle={{width: RFPercentage(43), padding : RFPercentage(4)}}>
 
             <Icon name="warning" style={{color: '#be2c54', fontSize: RFPercentage(4)}}></Icon>
             <Text style={{marginBottom: 15, textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>{warningLabel}</Text>
@@ -52,7 +52,7 @@ export const WarningModal : React.FC<WarningModalProps> = ({ setWarningModalVisi
                 onPress={() => setWarningModalVisible(!modalVisible)}>
                 <Text style={homeStyles.modalTextStyle}>Fermer</Text>
             </Pressable>
-        </CommonModal>
+        </Common_modal>
     );
 };
 
@@ -111,7 +111,7 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
     }
 
     return (
-        <CommonModal modalVisible={modalVisible} setModalVisible={setModalVisible} >
+        <Common_modal modalVisible={modalVisible} setModalVisible={setModalVisible} >
             <WarningModal modalVisible={newUserWarningModalVisible}
                           setWarningModalVisible={setNewUserWarningModalVisible}
                           warningLabel={"Veuillez indiquer votre nom et prénom ❗"}/>
@@ -131,7 +131,7 @@ export const NewUserModal : React.FC<newUserModalProps> = ({ setModalVisible, mo
                 onPress={handleCreateUser}>
                 <Text style={homeStyles.modalTextStyle}>Valider</Text>
             </Pressable>
-        </CommonModal>
+        </Common_modal>
     );
 }
     interface crudButtonProps {

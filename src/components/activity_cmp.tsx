@@ -5,7 +5,7 @@ import {activityStyles} from "../styles/activityStyles.ts";
 import {genericData, userData} from "../types/dataTypes.ts";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import {homeStyles} from "../screens/HomeScreen.tsx";
-import {CommonModal} from "./commonModal.tsx";
+import {Common_modal} from "./common_modal.tsx";
 
 
 const renderItem = (
@@ -48,7 +48,7 @@ interface WarningModalProps {
 export const WarningModal : React.FC<WarningModalProps> =
     ({ setWarningModalVisible, modalVisible, setStarted, setTime, clockReset }) => {
     return (
-        <CommonModal modalVisible={modalVisible} setModalVisible={setWarningModalVisible}>
+        <Common_modal modalVisible={modalVisible} setModalVisible={setWarningModalVisible}>
             <Text style={{marginBottom: RFPercentage(1.4), textAlign: 'center', color: 'black', fontSize: RFPercentage(3)}}>
                 ⚠️ Attention ⚠️
             </Text>
@@ -80,7 +80,7 @@ export const WarningModal : React.FC<WarningModalProps> =
                     <Text style={homeStyles.modalTextStyle}>Non</Text>
                 </Pressable>
             </View>
-        </CommonModal>
+        </Common_modal>
     );
 }
 
@@ -96,8 +96,8 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
 
     return (
         <View style={{width: "55%", justifyContent: "center", alignItems: "center"}}>
-            <CommonModal modalVisible={modalVisible} setModalVisible={setModalVisible}
-                         modalViewStyle={{flexDirection: "row"}}>
+            <Common_modal modalVisible={modalVisible} setModalVisible={setModalVisible}
+                          modalViewStyle={{flexDirection: "row"}}>
                 <MultiSelect
                     style={[activityStyles.dropdown, {padding: RFPercentage(0.4), width: "90%"}]}
                     itemContainerStyle={activityStyles.itemContainer}
@@ -105,7 +105,7 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
                     data={dataAsObj}
                     labelField="label"
                     valueField="label"
-                    placeholder="   ..."
+                    placeholder="   Sélectionner..."
                     value={props.value}
                     search
                     maxHeight={RFPercentage(32)}
@@ -121,7 +121,7 @@ export const ModalActivity = (props: ModalActivityProps): React.JSX.Element => {
                     <Image source={require("../styles/assets/cross.png")}
                            style={{width: RFPercentage(2.9), height: RFPercentage(2.9)}} />
                 </Pressable>
-            </CommonModal>
+            </Common_modal>
             <Pressable
                 style={activityStyles.buttonOpen}
                 onPress={() => setModalVisible(true)}>
@@ -159,7 +159,7 @@ export const DropList = (props: DropListProps): React.JSX.Element => {
             maxHeight={RFPercentage(25)}
             labelField="label"
             valueField="label"
-            placeholder={''}
+            placeholder={"    Sélectionner..."}
             searchPlaceholder="Rechercher..."
             value={dataAsObj.find((e) => e.label === props.value)}
             onChange={item => {

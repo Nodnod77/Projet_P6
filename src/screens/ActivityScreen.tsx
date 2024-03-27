@@ -14,9 +14,9 @@ import {
 } from "../components/activity_cmp.tsx";
 import {activityStyles} from "../styles/activityStyles.ts";
 import {compteurT, outputT, userData} from "../types/dataTypes.ts";
-import {StackParamList} from "../components/navigation/StackNavigator.tsx";
+import {StackParamList} from "../components/navigation/stack_navigator.tsx";
 import {RouteProp} from '@react-navigation/native';
-import JsonFS from "../components/jsonFS.ts";
+import JsonFS from "../components/json_file_system.ts";
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {RFPercentage} from "react-native-responsive-fontsize";
 import ScrollView = Animated.ScrollView;
@@ -27,10 +27,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 async function sort(data: string[], prenom: string, nom: string, attr: string): Promise<Array<string>> {
     let value = await AsyncStorage.getItem(prenom.toString() + nom.toString())
 
-    console.debug(attr)
     if(value != null){
         let save: compteurT[] = JSON.parse(value)[attr]
-        console.debug(save)
         return data.sort((a, b) => {
             let aIndex = save.findIndex((v) => v.nom === a)
             let bIndex = save.findIndex((v) => v.nom === b)
@@ -46,8 +44,7 @@ async function sort(data: string[], prenom: string, nom: string, attr: string): 
 interface ActivityProps {
     route: RouteProp<StackParamList, 'ActivityScreen'>;
 }
-
-function Activity({ route }: ActivityProps): React.ReactElement{
+function ActivityScreen({ route }: ActivityProps): React.ReactElement{
     // Params
     const { prenom, nom }: userData = route.params.user;
     const moment = require('moment-timezone');
@@ -133,7 +130,6 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                 </InputLine>
             </View>
 
-            {/*TODO: Disable back button when started*/}
             {/* ---------------------------- If Started, show stop buttons ------------------------------------- */}
             <View style={{display: started ? undefined : "none", paddingBottom: RFPercentage(3)}}>
                 <VSpace margin={RFPercentage(1)}/>
@@ -167,7 +163,6 @@ function Activity({ route }: ActivityProps): React.ReactElement{
                 <Pressable
                     style={activityStyles.buttonEnd}
                     onPress={() => {
-                        // TODO: Gérer changement d'heure, actuellment en UTC0, prendre l'heure de la tablette ?
                         // Save into json
                         let entry: outputT = {
                             prenom: prenom,
@@ -235,6 +230,6 @@ function Activity({ route }: ActivityProps): React.ReactElement{
 }
 
 
-export default Activity;
+export default ActivityScreen;
 
 
